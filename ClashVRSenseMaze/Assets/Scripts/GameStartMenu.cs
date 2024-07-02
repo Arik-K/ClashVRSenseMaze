@@ -8,13 +8,16 @@ public class GameStartMenu : MonoBehaviour
     [Header("UI Pages")]
     public GameObject mainMenu;
     public GameObject options;
-    public GameObject about;
+    public GameObject training;
 
     [Header("Main Menu Buttons")]
     public Button startButton;
     public Button optionButton;
-    public Button aboutButton;
+    public Button trainingButton;
     public Button quitButton;
+
+    private const int MainGameSceneIndex = 1;
+    private const int TrainingSceneIndex = 2;
 
     public List<Button> returnButtons;
 
@@ -23,10 +26,10 @@ public class GameStartMenu : MonoBehaviour
     {
         EnableMainMenu();
 
-        //Hook events
+        // Hook events
         startButton.onClick.AddListener(StartGame);
         optionButton.onClick.AddListener(EnableOption);
-        aboutButton.onClick.AddListener(EnableAbout);
+        trainingButton.onClick.AddListener(EnableTraining);
         quitButton.onClick.AddListener(QuitGame);
 
         foreach (var item in returnButtons)
@@ -43,32 +46,40 @@ public class GameStartMenu : MonoBehaviour
     public void StartGame()
     {
         HideAll();
-        SceneTransitionManager.singleton.GoToSceneAsync(1);
+        SceneTransitionManager.singleton.GoToSceneAsync(MainGameSceneIndex);
     }
 
     public void HideAll()
     {
         mainMenu.SetActive(false);
         options.SetActive(false);
-        about.SetActive(false);
+        training.SetActive(false);
     }
 
     public void EnableMainMenu()
     {
         mainMenu.SetActive(true);
         options.SetActive(false);
-        about.SetActive(false);
+        training.SetActive(true);
     }
+
     public void EnableOption()
     {
         mainMenu.SetActive(false);
         options.SetActive(true);
-        about.SetActive(false);
+        training.SetActive(false);
     }
-    public void EnableAbout()
+
+    public void EnableTraining()
     {
         mainMenu.SetActive(false);
         options.SetActive(false);
-        about.SetActive(true);
+        training.SetActive(true);
+    }
+
+    public void StartTraining()
+    {
+        HideAll();
+        SceneTransitionManager.singleton.GoToSceneAsync(TrainingSceneIndex);
     }
 }
