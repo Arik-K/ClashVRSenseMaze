@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class GameStartMenu : MonoBehaviour
@@ -8,7 +9,7 @@ public class GameStartMenu : MonoBehaviour
     [Header("UI Pages")]
     public GameObject mainMenu;
     public GameObject options;
-    public GameObject training;
+
 
     [Header("Main Menu Buttons")]
     public Button startButton;
@@ -29,7 +30,7 @@ public class GameStartMenu : MonoBehaviour
         // Hook events
         startButton.onClick.AddListener(StartGame);
         optionButton.onClick.AddListener(EnableOption);
-        trainingButton.onClick.AddListener(EnableTraining);
+        trainingButton.onClick.AddListener(StartTraining);
         quitButton.onClick.AddListener(QuitGame);
 
         foreach (var item in returnButtons)
@@ -53,29 +54,21 @@ public class GameStartMenu : MonoBehaviour
     {
         mainMenu.SetActive(false);
         options.SetActive(false);
-        training.SetActive(false);
     }
 
     public void EnableMainMenu()
     {
         mainMenu.SetActive(true);
         options.SetActive(false);
-        training.SetActive(true);
+
     }
 
     public void EnableOption()
     {
         mainMenu.SetActive(false);
         options.SetActive(true);
-        training.SetActive(false);
     }
 
-    public void EnableTraining()
-    {
-        mainMenu.SetActive(false);
-        options.SetActive(false);
-        training.SetActive(true);
-    }
 
     public void StartTraining()
     {

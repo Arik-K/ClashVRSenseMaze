@@ -12,7 +12,7 @@ public class PauseScreen : MonoBehaviour
     public InputActionProperty OpenMenuAction;
     public GameObject vPauseMenu;
     public GameObject menuCanvas;
-    public bool isPaused;
+
 
     //public GameManagerScript gms;
     //private TrainingScript ts;
