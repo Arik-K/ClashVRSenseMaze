@@ -12,6 +12,7 @@ TagManager:
   - GhostWall
   - StartPoint
   - Ground
+  - Hand
   layers:
   - Default
   - TransparentFX
