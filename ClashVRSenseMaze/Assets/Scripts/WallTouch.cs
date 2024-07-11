@@ -1,34 +1,60 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class WallTouch : MonoBehaviour
 {
-    public float hapticDuration = 0.1f; // Duration of the haptic feedback
-    public float hapticAmplitude = 0.5f; // Intensity of the haptic feedback
+    public XRBaseController controller;
+    public float vibrationIntensity = 0.3f;
+    public float vibrationDuration = 0.1f;
+    private Coroutine hapticCoroutine;
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        // Check if the object that collided with the wall is the player's hand
-        if (collision.gameObject.CompareTag("Hand"))
+        if (other.gameObject.CompareTag("Wall") ||other.gameObject.CompareTag("MuteWall"))
         {
-            // Get the XRController component from the colliding object
-            XRBaseController controller = collision.gameObject.GetComponent<XRBaseController>();
-
-            if (controller != null)
+            if (hapticCoroutine == null)
             {
-                // Send haptic feedback to the controller
-                SendHapticFeedback(controller, hapticDuration, hapticAmplitude);
+                hapticCoroutine = StartCoroutine(ContinuousHapticFeedback());
             }
         }
     }
 
-    private void SendHapticFeedback(XRBaseController controller, float duration, float amplitude)
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Wall") ||other.gameObject.CompareTag("MuteWall"))
+        {
+            if (hapticCoroutine != null)
+            {
+                StopCoroutine(hapticCoroutine);
+                hapticCoroutine = null;
+            }
+            StopHapticFeedback(controller);
+        }
+    }
+
+    private IEnumerator ContinuousHapticFeedback()
+    {
+        while (true)
+        {
+            TriggerHapticFeedback(controller);
+            yield return new WaitForSeconds(vibrationDuration);
+        }
+    }
+
+    private void TriggerHapticFeedback(XRBaseController controller)
     {
         if (controller != null)
         {
-            controller.SendHapticImpulse(amplitude, duration);
+            controller.SendHapticImpulse(vibrationIntensity, vibrationDuration);
+        }
+    }
+
+    private void StopHapticFeedback(XRBaseController controller)
+    {
+        if (controller != null)
+        {
+            controller.SendHapticImpulse(0, 0);
         }
     }
 }

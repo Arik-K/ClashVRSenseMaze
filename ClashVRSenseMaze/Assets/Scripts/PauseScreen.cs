@@ -27,7 +27,7 @@ public class PauseScreen : MonoBehaviour
         if(OpenMenuAction.action.WasPressedThisFrame())
         {
             menuCanvas.SetActive(!menuCanvas.activeSelf);
-            vPauseMenu.SetActive(true);
+            vPauseMenu.SetActive(!menuCanvas.activeSelf);
         }
     }
 
