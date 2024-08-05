@@ -6,7 +6,7 @@ public class StartPointScript : MonoBehaviour
 {
     public GameObject instructionPanel; // Reference to the panel containing instructions
 
-    private void OnTriggerEnter(Collider other)
+    /*private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
@@ -23,5 +23,5 @@ public class StartPointScript : MonoBehaviour
             // Optionally, disable the cube/trigger after triggering once
             gameObject.SetActive(false);
         }
-    }
+    }*/
 }

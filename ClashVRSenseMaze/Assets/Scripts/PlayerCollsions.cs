@@ -7,11 +7,12 @@ using UnityEngine.Events;
 
 
 [System.Serializable]
-public class CollisionEvent : UnityEvent<Collider> {}
+public class CollisionEvent : UnityEvent {}
 [System.Serializable]
 public class FinishEvent : UnityEvent {}
 [System.Serializable]
 public class TimeoutEvent : UnityEvent {}
+
 
 public class PlayerCollsions : MonoBehaviour
 {
@@ -27,6 +28,11 @@ public class PlayerCollsions : MonoBehaviour
         if (other.gameObject.CompareTag("Goal"))
         {
             onFinish?.Invoke();
+        }
+
+        if(other.gameObject.CompareTag("StartPoint"))
+        {
+            onStartingPointCollision?.Invoke();
         }
 
     }

@@ -6,10 +6,11 @@ using UnityEngine.SceneManagement;
 public class TrainingManager : MonoBehaviour
 {
     public GameObject maze;
-    public GameObject Goal;
+    public GameObject goal;
     public GameObject player; // the player game object
-    public GameObject VisionPanel; // to make no vision
+    public GameObject visionPanel; // to make no vision
     public GameObject instructionPanel; // Reference to the panel containing instructions
+    public GameObject startPoint;
 
     
     public static int ConditionCount = 0;
@@ -27,9 +28,9 @@ public class TrainingManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        ConditionCount = -1;
+        ConditionCount = 0;
         int LayerIgnoreRaycast = LayerMask.NameToLayer("Ignore Raycast");
-        Goal.layer = LayerIgnoreRaycast;
+        goal.layer = LayerIgnoreRaycast;
         Debug.Log("Current layer: " + gameObject.layer);
         audioSourcePlayer = player.GetComponent<AudioSource>();
         startTime = Time.time;
@@ -37,42 +38,57 @@ public class TrainingManager : MonoBehaviour
         // Disable instruction panel at start
         instructionPanel.SetActive(false);
 
-        
         // Find the PlayerCollisions script and subscribe to the onFinish event.
         PlayerCollsions playerCollisions = FindObjectOfType<PlayerCollsions>();
         if (playerCollisions != null)
         {
             playerCollisions.onFinish.AddListener(OnFinish);
+            playerCollisions.onStartingPointCollision.AddListener(OnStartingPointCollision);
         }
         else
         {
             Debug.LogError("PlayerCollisions script not found!");
         }
 
-        NextMaze();
+
     }
 
     private void OnFinish()
     {
         // Handle the finish event (e.g., start the next maze).
-        NextMaze(); 
+        goal.SetActive(false);
+        maze.SetActive(false);
+        startPoint.SetActive(true);
+        visionPanel.SetActive(false);
+        //instructionPanel.SetActive(true);
+        
     }
 
-    void Update()
+    private void OnStartingPointCollision()
+    {
+        startPoint.SetActive(false);
+        goal.SetActive(true);
+        maze.SetActive(true);
+
+        NextMaze();
+        //ActivateCondition(conditions[ConditionCount]);
+    }
+
+   /* void Update()
     {
         // Check if 2 minutes have passed
         if (Time.time - startTime >= timeBetweenMazes)
         {
-            //NextMaze();
+            NextMaze();
         }
-    }
+    }*/
 
     public void NextMaze()
     {
 
         if (ConditionCount == 4)
         {
-            SceneManager.LoadScene("MainMenu");
+            SceneManager.LoadScene("MainMenuScene");
             return;
         }
 
@@ -104,50 +120,31 @@ public class TrainingManager : MonoBehaviour
 
     void ApplyVisualAudioHaptic()
     {
-        VisionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
+        visionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
         audioSourcePlayer.volume = 0.5f;
         Debug.Log("Applying all senses");
     }
 
     void ApplyVisual()
     {
-        VisionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
+        visionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
         audioSourcePlayer.volume = 0f;
+        
         Debug.Log("Applying visual only");
     }
 
     void ApplyAudio()
     {
-        VisionPanel.SetActive(true); // Assuming VisionPanel is properly initialized in Start()
+        visionPanel.SetActive(true); // Assuming VisionPanel is properly initialized in Start()
         audioSourcePlayer.volume = 0.5f;
         Debug.Log("Applying audio only");
     }
 
     void ApplyHaptic()
     {
-        VisionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
+        visionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
         audioSourcePlayer.volume = 0f;
         Debug.Log("Applying haptic only");
-    }
-
-    // Method to start the next level after showing instructions
-    public void NextLevel()
-    {
-        instructionPanel.SetActive(true); // Show instructions panel
-        // Optionally, you can add additional logic before starting the maze
-        StartCoroutine(StartMazeAfterDelay());
-    }
-
-    IEnumerator StartMazeAfterDelay()
-    {
-        // Wait for 3 seconds (or adjust as needed)
-        yield return new WaitForSeconds(3f);
-
-        // Hide instruction panel
-        instructionPanel.SetActive(false);
-
-        // Start the maze
-        NextMaze();
     }
 
 }

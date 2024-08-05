@@ -5,7 +5,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class WallTouch : MonoBehaviour
 {
     public XRBaseController controller;
-    public float vibrationIntensity = 0.3f;
+    public float vibrationIntensity = 0.2f;
     public float vibrationDuration = 0.1f;
     private Coroutine hapticCoroutine;
 
