@@ -9,8 +9,11 @@ public class WallTouch : MonoBehaviour
     public float vibrationDuration = 0.1f;
     private Coroutine hapticCoroutine;
 
+   public bool isWallTouchEnabled = true;
     private void OnTriggerEnter(Collider other)
     {
+        if (!isWallTouchEnabled) return;
+        
         if (other.gameObject.CompareTag("Wall") ||other.gameObject.CompareTag("MuteWall"))
         {
             if (hapticCoroutine == null)

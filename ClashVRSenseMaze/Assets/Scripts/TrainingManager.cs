@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class TrainingManager : MonoBehaviour
 {
+   
+   
     public GameObject maze;
     public GameObject goal;
     public GameObject player; // the player game object
@@ -19,8 +21,6 @@ public class TrainingManager : MonoBehaviour
     public static string maze_name = "Training";
     public static string[] conditions = new string[] { "all", "visual_only", "audio_only", "Haptic_only" };
   
-    // audio clips to play for raycasting sounds
-    private static Vector3 initial_position = new Vector3(-2.21f, 0f, 2.28f);
     private float startTime;
     public float timeBetweenMazes = 120f; // 2 minutes in seconds
 
@@ -32,6 +32,9 @@ public class TrainingManager : MonoBehaviour
         int LayerIgnoreRaycast = LayerMask.NameToLayer("Ignore Raycast");
         goal.layer = LayerIgnoreRaycast;
         Debug.Log("Current layer: " + gameObject.layer);
+        
+        FindObjectOfType<WallTouch>().isWallTouchEnabled = false;
+
         audioSourcePlayer = player.GetComponent<AudioSource>();
         startTime = Time.time;
 
@@ -129,7 +132,7 @@ public class TrainingManager : MonoBehaviour
     {
         visionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
         audioSourcePlayer.volume = 0f;
-        
+        FindObjectOfType<WallTouch>().isWallTouchEnabled = false;
         Debug.Log("Applying visual only");
     }
 
@@ -137,6 +140,7 @@ public class TrainingManager : MonoBehaviour
     {
         visionPanel.SetActive(true); // Assuming VisionPanel is properly initialized in Start()
         audioSourcePlayer.volume = 0.5f;
+        FindObjectOfType<WallTouch>().isWallTouchEnabled = false;
         Debug.Log("Applying audio only");
     }
 
@@ -144,6 +148,7 @@ public class TrainingManager : MonoBehaviour
     {
         visionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
         audioSourcePlayer.volume = 0f;
+        FindObjectOfType<WallTouch>().isWallTouchEnabled = true;
         Debug.Log("Applying haptic only");
     }
 
