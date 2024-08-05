@@ -12,12 +12,5 @@ public class GoalScript : MonoBehaviour
         trainingManager = FindObjectOfType<TrainingManager>();
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            // Player reached the goal, notify TrainingManager
-            trainingManager.ReachedGoal();
-        }
-    }
+
 }
