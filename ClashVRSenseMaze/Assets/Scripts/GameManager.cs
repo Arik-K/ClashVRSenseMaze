@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     public float timeBetweenMazes = 120f;
     private WallTouch wallTouchScript;
 
+    private bool isInMaze = false; // Flag to track if player is in a maze
+
     void Start()
     {
         mazeCount = 0;
@@ -30,15 +32,12 @@ public class GameManager : MonoBehaviour
             goal.layer = LayerIgnoreRaycast;
         }
 
-        // Find and cache a reference to the WallTouch script
         wallTouchScript = FindObjectOfType<WallTouch>();
 
-        // Initial setup
         audioSourcePlayer = player.GetComponent<AudioSource>();
         startTime = Time.time;
         instructionPanel.SetActive(false);
 
-        // Event subscription
         PlayerCollsions playerCollisions = FindObjectOfType<PlayerCollsions>();
         if (playerCollisions != null)
         {
@@ -50,27 +49,34 @@ public class GameManager : MonoBehaviour
             Debug.LogError("PlayerCollisions script not found!");
         }
 
-        ActivateMaze(mazeCount); 
     }
 
     private void OnFinish()
     {
-        goals[mazeCount].SetActive(false); 
-        startingPoints[mazeCount].SetActive(true); 
-        visionPanel.SetActive(false);
+        goals[mazeCount - 1].SetActive(false); 
+        mazes[mazeCount-1].SetActive(false);
+        mazeCount++;
+        isInMaze = false;
+
+        if (mazeCount < mazes.Length) 
+        {
+            startingPoints[mazeCount].SetActive(true);
+            visionPanel.SetActive(false);
+        }
+        else 
+        {
+            SceneManager.LoadScene("MainMenuScene");
+        }
     }
 
     private void OnStartingPointCollision()
     {
-        startingPoints[mazeCount].SetActive(false); 
-        goals[mazeCount].SetActive(true);
+
+            startingPoints[mazeCount].SetActive(false);
+            goals[mazeCount].SetActive(true);
+
+            NextMaze(); 
         
-        // Enable WallTouch after entering a starting point
-        if (wallTouchScript != null)
-        {
-            wallTouchScript.isWallTouchEnabled = true;
-        }
-        NextMaze(); 
     }
 
     public void NextMaze()
@@ -86,24 +92,23 @@ public class GameManager : MonoBehaviour
 
     public void ActivateMaze(int mazeIndex)
     {
+        // Disable all mazes, starting points, and goals except for the selected one
         for (int i = 0; i < mazes.Length; i++)
         {
             mazes[i].SetActive(i == mazeIndex);
-            startingPoints[i].SetActive(i == mazeIndex);
+            startingPoints[i].SetActive(false);
             goals[i].SetActive(i == mazeIndex);
         }
 
         if (mazeIndex >= 0 && mazeIndex < mazes.Length && mazeIndex < startingPoints.Length && mazeIndex < goals.Length)
         {
             mazeCount++;
-            player.transform.position = startingPoints[mazeIndex].transform.position;
         }
         else
         {
             Debug.LogError("Invalid maze, starting point, or goal index: " + mazeIndex);
         }
     }
-
 
 
 
