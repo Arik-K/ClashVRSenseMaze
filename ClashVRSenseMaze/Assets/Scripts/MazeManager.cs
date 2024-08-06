@@ -6,17 +6,17 @@ using System.Linq;
 public class MazeManager : MonoBehaviour
 {
     public Material[] materials; // The array of materials you want to use.
-    public GameObject ObscureView;// for visual off
+    public GameObject noVision;// for visual off
     public GameObject player;
     private GameObject[] phantom_maze_list;  
     private Camera playerCamera;
-    private Renderer renderer;
+
     private int currentTextureIndex = 0;
     
     // Start is called before the first frame update
     void Start()
     {
-        renderer = GetComponent<Renderer>();
+        
     }
 
     // Update is called once per frame

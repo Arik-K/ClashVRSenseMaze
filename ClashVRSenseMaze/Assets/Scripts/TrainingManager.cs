@@ -14,9 +14,14 @@ public class TrainingManager : MonoBehaviour
     public GameObject instructionPanel; // Reference to the panel containing instructions
     public GameObject startPoint;
 
+    public GameObject Left;
+    public GameObject Right;
+
     
     public static int ConditionCount = 0;
     private AudioSource audioSourcePlayer; // the audio source component attached to this game object
+    private AudioSource audioSourcePlayerLeft;
+    private AudioSource audioSourcePlayerRight;
 
     public static string maze_name = "Training";
     public static string[] conditions = new string[] { "all", "visual_only", "audio_only", "Haptic_only" };
@@ -36,6 +41,8 @@ public class TrainingManager : MonoBehaviour
         FindObjectOfType<WallTouch>().isWallTouchEnabled = false;
 
         audioSourcePlayer = player.GetComponent<AudioSource>();
+        audioSourcePlayerLeft = Left.GetComponent<AudioSource>();
+        audioSourcePlayerRight = Right.GetComponent<AudioSource>();
         startTime = Time.time;
 
         // Disable instruction panel at start
@@ -132,6 +139,8 @@ public class TrainingManager : MonoBehaviour
     {
         visionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
         audioSourcePlayer.volume = 0f;
+        audioSourcePlayerLeft.volume = 0f;
+        audioSourcePlayerRight.volume = 0f;
         FindObjectOfType<WallTouch>().isWallTouchEnabled = false;
         Debug.Log("Applying visual only");
     }
@@ -139,15 +148,19 @@ public class TrainingManager : MonoBehaviour
     void ApplyAudio()
     {
         visionPanel.SetActive(true); // Assuming VisionPanel is properly initialized in Start()
-        audioSourcePlayer.volume = 0.5f;
+        audioSourcePlayer.volume = 0.25f;
+        audioSourcePlayerLeft.volume = 0.5f;
+        audioSourcePlayerRight.volume = 0.5f;
         FindObjectOfType<WallTouch>().isWallTouchEnabled = false;
         Debug.Log("Applying audio only");
     }
 
     void ApplyHaptic()
     {
-        visionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
+        visionPanel.SetActive(true); // Assuming VisionPanel is properly initialized in Start()
         audioSourcePlayer.volume = 0f;
+        audioSourcePlayerLeft.volume = 0f;
+        audioSourcePlayerRight.volume = 0f;
         FindObjectOfType<WallTouch>().isWallTouchEnabled = true;
         Debug.Log("Applying haptic only");
     }

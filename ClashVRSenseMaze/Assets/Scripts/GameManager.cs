@@ -1,62 +1,114 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.IO;
 using TMPro;
 using UnityEngine.SceneManagement;
+
 public class GameManager : MonoBehaviour
 {
-    public GameObject mazes;
-    MazeManager mm;
-    Logger ls;
-    TrainingManager ts;
-    PauseScreen pm;
+    public GameObject[] mazes;
+    public GameObject[] startingPoints;
+    public GameObject[] goals;
+    public GameObject player;
+    public GameObject visionPanel;
+    public GameObject instructionPanel;
 
-    public GameObject NextLevelCanvas1;
-    public List<Transform> all_mazes;
-    public GameObject Goal;
-    public static int mazeIndex = -1;
-    public static int count = 0;
+    public static int mazeCount = 0;
+    private AudioSource audioSourcePlayer;
+    public static string maze_name = "Game";
 
-    private string temp_str;
-    private Transform temp_trans;
-    private AudioSource audioSource; // the audio source component attached to this game object
-    private string[] MazeType_temp = new string[]  {} ;
-    private string[] ConditionType_temp = new string[]  {} ;
+    private float startTime;
+    public float timeBetweenMazes = 120f;
+    private WallTouch wallTouchScript;
 
-    public TextMeshProUGUI textMeshPro;
-    public static string[] mazes_name_list =  new string[]  {} ;
-    public static string[] conditions = new string[] {};
-    public GameObject player; // the player game object
-    // audio clips to play for raycasting sounds
-    public AudioClip[] audioClips;
-    private static Vector3 maze1_intial_location = new Vector3(0.62f, 0.219f, -1.23f);
-    private static Vector3 maze2_intial_location = new Vector3(0.62f, 0.219f, 0.83f);
-    private static Vector3 maze3_intial_location = new Vector3(0.62f, 0.219f, 0.83f);
-    // private static Vector3 maze4_intial_location = new Vector3(-0.59f, 0.219f, 0.86f); 
-
-    // Start is called before the first frame update
-      void Start()
-      {   
-        //gameObject.layer uses only integers, but we can turn a layer name into a layer integer using LayerMask.NameToLayer()
-        int LayerIgnoreRaycast = LayerMask.NameToLayer("Ignore Raycast");
-        Goal.layer = LayerIgnoreRaycast;
-
-        Debug.Log("Current layer: " + gameObject.layer);
-        mm = mazes.GetComponent<MazeManager>();
-        audioSource = player.GetComponent<AudioSource>();
-       // MainMenu.isTraining = false;
-        //NextMaze();
-      }
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-        
+        mazeCount = 0;
+        int LayerIgnoreRaycast = LayerMask.NameToLayer("Ignore Raycast");
+        foreach (GameObject goal in goals)
+        {
+            goal.layer = LayerIgnoreRaycast;
+        }
+
+        // Find and cache a reference to the WallTouch script
+        wallTouchScript = FindObjectOfType<WallTouch>();
+
+        // Initial setup
+        audioSourcePlayer = player.GetComponent<AudioSource>();
+        startTime = Time.time;
+        instructionPanel.SetActive(false);
+
+        // Event subscription
+        PlayerCollsions playerCollisions = FindObjectOfType<PlayerCollsions>();
+        if (playerCollisions != null)
+        {
+            playerCollisions.onFinish.AddListener(OnFinish);
+            playerCollisions.onStartingPointCollision.AddListener(OnStartingPointCollision);
+        }
+        else
+        {
+            Debug.LogError("PlayerCollisions script not found!");
+        }
+
+        ActivateMaze(mazeCount); 
     }
-    
-    
-    public void UpdateTextNextLevelScreen(string condition_name)
+
+    private void OnFinish()
+    {
+        goals[mazeCount].SetActive(false); 
+        startingPoints[mazeCount].SetActive(true); 
+        visionPanel.SetActive(false);
+    }
+
+    private void OnStartingPointCollision()
+    {
+        startingPoints[mazeCount].SetActive(false); 
+        goals[mazeCount].SetActive(true);
+        
+        // Enable WallTouch after entering a starting point
+        if (wallTouchScript != null)
+        {
+            wallTouchScript.isWallTouchEnabled = true;
+        }
+        NextMaze(); 
+    }
+
+    public void NextMaze()
+    {
+        if (mazeCount == mazes.Length) 
+        {
+            SceneManager.LoadScene("MainMenuScene");
+            return;
+        }
+
+        ActivateMaze(mazeCount); 
+    }
+
+    public void ActivateMaze(int mazeIndex)
+    {
+        for (int i = 0; i < mazes.Length; i++)
+        {
+            mazes[i].SetActive(i == mazeIndex);
+            startingPoints[i].SetActive(i == mazeIndex);
+            goals[i].SetActive(i == mazeIndex);
+        }
+
+        if (mazeIndex >= 0 && mazeIndex < mazes.Length && mazeIndex < startingPoints.Length && mazeIndex < goals.Length)
+        {
+            mazeCount++;
+            player.transform.position = startingPoints[mazeIndex].transform.position;
+        }
+        else
+        {
+            Debug.LogError("Invalid maze, starting point, or goal index: " + mazeIndex);
+        }
+    }
+
+
+
+
+
+    /*public void UpdateTextNextLevelScreen(string condition_name)
     {
       switch (condition_name)
       {
@@ -105,6 +157,6 @@ public class GameManager : MonoBehaviour
 
       } 
     
-    }
+    }*/
     
 }
