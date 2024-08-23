@@ -14,7 +14,7 @@ public class WallTouch : MonoBehaviour
     {
         if (!isWallTouchEnabled) return;
         
-        if (other.gameObject.CompareTag("Wall") ||other.gameObject.CompareTag("MuteWall"))
+        if (other.gameObject.CompareTag("Wall") ||other.gameObject.CompareTag("Mute"))
         {
             if (hapticCoroutine == null)
             {
@@ -25,7 +25,7 @@ public class WallTouch : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Wall") ||other.gameObject.CompareTag("MuteWall"))
+        if (other.gameObject.CompareTag("Wall") ||other.gameObject.CompareTag("Mute"))
         {
             if (hapticCoroutine != null)
             {

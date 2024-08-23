@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEditorInternal;
 
 public class GameManager : MonoBehaviour
 {
+    MazeManager mazeManager;
+
+    public TextMeshProUGUI textMeshPro;
+    
     public GameObject[] mazes;
     public GameObject[] startingPoints;
     public GameObject[] goals;
@@ -75,22 +80,13 @@ public class GameManager : MonoBehaviour
             startingPoints[mazeCount].SetActive(false);
             goals[mazeCount].SetActive(true);
 
-            NextMaze(); 
+            mazeManager.NextMaze();
         
     }
 
-    public void NextMaze()
-    {
-        if (mazeCount == mazes.Length) 
-        {
-            SceneManager.LoadScene("MainMenuScene");
-            return;
-        }
 
-        ActivateMaze(mazeCount); 
-    }
 
-    public void ActivateMaze(int mazeIndex)
+   /* public void ActivateMaze(int mazeIndex)
     {
         // Disable all mazes, starting points, and goals except for the selected one
         for (int i = 0; i < mazes.Length; i++)
@@ -108,12 +104,12 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("Invalid maze, starting point, or goal index: " + mazeIndex);
         }
-    }
+    }*/
 
 
 
 
-    /*public void UpdateTextNextLevelScreen(string condition_name)
+    public void UpdateTextNextLevelScreen(string condition_name)
     {
       switch (condition_name)
       {
@@ -156,12 +152,12 @@ public class GameManager : MonoBehaviour
             break;
 
         // Special wall case
-        case "invisible" when true:
+        /*case "invisible" when true:
             textMeshPro.text = "Trust Audio and Haptic, Visual Could Be Misleading";
-            break;  
+            break;  */
 
       } 
     
-    }*/
+    }
     
 }

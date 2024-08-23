@@ -2,15 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class MazeManager : MonoBehaviour
 {
-    public Material[] materials; // The array of materials you want to use.
-    public GameObject noVision;// for visual off
-    public GameObject player;
-    private GameObject[] phantom_maze_list;  
-    private Camera playerCamera;
+    // The array of materials you want to use.
+    public Material[] materials; 
 
+    //gameObjects
+    public GameObject visionPanel;// for visual off
+    public GameObject player;
+    
+    // audio sources
+    private AudioSource audioSourcePlayer;
+    private AudioSource audioSourcePlayerLeft;
+    private AudioSource audioSourcePlayerRight;
+
+
+    public static string[] conditions = new string[] { "all", "visual_only", "audio_only", "haptic_only",
+        "visual_off", "audio_off", "haptic_off",
+        "visual_full_clash", "audio_full_clash", "haptic_full_clash"};
+    List<string> visualTags = new List<string> { "Ivisible", "VisualGhost" };
+    List<string> audioTags = new List<string> { "Mute", "AudioGhost" };
+    List<string> hapticTags = new List<string> { "Intangable", "TangableGhost" };
+    
+    private int ConditionCount;
     private int currentTextureIndex = 0;
     
     // Start is called before the first frame update
@@ -20,7 +36,7 @@ public class MazeManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void ActivateMaze(string curr_maze)
+    /*public void ActivateMaze(string curr_maze)
     {
         print("Maze - " + curr_maze);
         // Enable only current maze walls
@@ -35,68 +51,257 @@ public class MazeManager : MonoBehaviour
                 maze.gameObject.SetActive(false);
             }
         }
+    }*/
+
+    
+    public void NextMaze()
+    {
+
+        if (ConditionCount == conditions.Length)
+        {
+            SceneManager.LoadScene("MainMenuScene");
+            return;
+        }
+
+        // Activate next condition
+        ActivateCondition(conditions[ConditionCount]);
     }
 
-    /*public void ActivateCondition(string maze, string condition)
+    public void ActivateCondition(string condition)
     {
-        AudioSource audioSourcePlayer = player.GetComponent<AudioSource>();
-        
-        
-        // Change Material
-        //int randomIndex = Random.Range(0, materials.Length); // Generate a random index within the materials array length
-        // ChangeWallsMaterial(maze_name, randomIndex); // Set the initial material by passing the desired index.  
-        print(maze);
-
         switch (condition)
         {
             // Deafult case all senses
             case "all" when true:
-                ApplyVisualAudioHaptic(maze_name);
+                ApplyVisualAudioHaptic();
                 break;
             
             // Only one sensory channel active
             case "audio_only" when true:
-                ApplyAudioOnly(maze_name);
+                ApplyAudio();
                 break;
             case "visual_only" when true:
-                ApplyVisualOnly(maze_name);
+                ApplyVisual();
                 break;
-            case "Haptic_only" when true:
-                ApplyHapticlOnly(maze_name);
+            case "haptic_only" when true:
+                ApplyHaptic();
                 break;
             
             // only Two sensory channels - One off
             case "audio_off" when true:
-                ApplyAudioOnly(maze_name);
+                ApplyAudioOff();
                 break;
             case "visual_off" when true:
-                ApplyVisualOnly(maze_name);
+                ApplyVisualOff();
                 break;
-            case "Haptic_off" when true:
-                ApplyHapticlOnly(maze_name);
+            case "haptic_off" when true:
+                ApplyHapticOff();
                 break;
 
             // Full clash with one sesnory channel
             case "audio_full_clash" when true:
-                ApplyContraVisual(maze_name);
+                ApplyAudioFullClash();
                 break;
             case "visual_full_clash" when true:
-                ApplyVisualOnly(maze_name);
+                ApplyVisualFullClash();
                 break;
             case "Haptic_full_clash" when true:
-                ApplyHapticlOnly(maze_name);
+                ApplyHapticlFullClash();
                 break;
 
             // Special wall case
-            case "invisible" when true:
-                ApplyInvisible(maze_name);
-                break;   
+            /*case "invisible" when true:
+                ApplyInvisible();
+                break;   */
         }
+
+        // Increment ConditionCount for the next maze
+        ConditionCount++;
+    }
+
+    void ApplyVisualAudioHaptic()
+    {
+        visionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
+        
+        audioSourcePlayer.volume = 0.25f;
+        audioSourcePlayerLeft.volume = 0.5f;
+        audioSourcePlayerRight.volume = 0.5f;
+        
+        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
+        foreach (WallTouch wallTouch in wallTouches)
+        {
+            wallTouch.isWallTouchEnabled = true;
+        }
+        Debug.Log("Applying all senses");
+    }
+
+    void ApplyVisual()
+    {
+        visionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
+        audioSourcePlayer.volume = 0f;
+        audioSourcePlayerLeft.volume = 0f;
+        audioSourcePlayerRight.volume = 0f;
+
+        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
+        foreach (WallTouch wallTouch in wallTouches)
+        {
+            wallTouch.isWallTouchEnabled = false;
+        }
+        Debug.Log("Applying visual only");
+    }
+
+    void ApplyAudio()
+    {
+        visionPanel.SetActive(true); // Assuming VisionPanel is properly initialized in Start()
+        
+        audioSourcePlayer.volume = 0.25f;
+        audioSourcePlayerLeft.volume = 0.5f;
+        audioSourcePlayerRight.volume = 0.5f;
+        
+        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
+        foreach (WallTouch wallTouch in wallTouches)
+        {
+            wallTouch.isWallTouchEnabled = false;
+        }
+        Debug.Log("Applying audio only");
+    }
+
+    void ApplyHaptic()
+    {
+        visionPanel.SetActive(true); // Assuming VisionPanel is properly initialized in Start()
+        
+        audioSourcePlayer.volume = 0f;
+        audioSourcePlayerLeft.volume = 0f;
+        audioSourcePlayerRight.volume = 0f;
+       
+       WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
+        foreach (WallTouch wallTouch in wallTouches)
+        {
+            wallTouch.isWallTouchEnabled = true;
+        }
+        Debug.Log("Applying haptic only");
+    }
+
+    void ApplyAudioOff()
+    {
+        // Visual Conditions
+        visionPanel.SetActive(false);
+
+        // Audio Conditions
+        audioSourcePlayer.volume = 0f;
+        audioSourcePlayerLeft.volume = 0f;
+        audioSourcePlayerRight.volume = 0f;
+       
+       // Haptic Consditions
+        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
+        foreach (WallTouch wallTouch in wallTouches)
+        {
+            wallTouch.isWallTouchEnabled = true;
+        }
+        Debug.Log("Applying Audio off");
+
+    }
+    
+    void ApplyVisualOff()
+    {
+        // Visual Conditions
+        visionPanel.SetActive(true);
+
+        // Audio Conditions
+        audioSourcePlayer.volume = 0.25f;
+        audioSourcePlayerLeft.volume = 0.5f;
+        audioSourcePlayerRight.volume = 0.5f;
+       
+       // Haptic Consditions
+        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
+        foreach (WallTouch wallTouch in wallTouches)
+        {
+            wallTouch.isWallTouchEnabled = true;
+        }
+        Debug.Log("Applying viusal off");
 
     }
 
+    void ApplyHapticOff()
+    {
+        // Visual Conditions
+        visionPanel.SetActive(false);
 
-    public void WallMaterialChange()
+        // Audio Conditions
+        audioSourcePlayer.volume = 0.25f;
+        audioSourcePlayerLeft.volume = 0.5f;
+        audioSourcePlayerRight.volume = 0.5f;
+       
+       // Haptic Consditions
+        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
+        foreach (WallTouch wallTouch in wallTouches)
+        {
+            wallTouch.isWallTouchEnabled = false;
+        }
+        Debug.Log("Applying haptic only");
+
+    }
+
+    
+
+    void ApplyVisualFullClash()
+    {
+        ApplyVisualAudioHaptic();
+
+
+
+
+        
+        Debug.Log("Applying Full Visual Clash");
+
+    }
+
+        void ApplyAudioFullClash()
+    {
+        // Visual Conditions
+        visionPanel.SetActive(false);
+
+        // Audio Conditions
+        audioSourcePlayer.volume = 0.25f;
+        audioSourcePlayerLeft.volume = 0.5f;
+        audioSourcePlayerRight.volume = 0.5f;
+       
+       // Haptic Conditions
+        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
+        foreach (WallTouch wallTouch in wallTouches)
+        {
+            wallTouch.isWallTouchEnabled = true;
+        }
+        
+        Debug.Log("Applying Full Visual Clash");
+
+    }
+    void ApplyHapticlFullClash()
+    {
+        // Visual Conditions
+        visionPanel.SetActive(false);
+
+        // Audio Conditions
+        audioSourcePlayer.volume = 0.25f;
+        audioSourcePlayerLeft.volume = 0.5f;
+        audioSourcePlayerRight.volume = 0.5f;
+       
+       // Haptic Conditions
+        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
+        foreach (WallTouch wallTouch in wallTouches)
+        {
+            wallTouch.isWallTouchEnabled = true;
+        }
+        
+        Debug.Log("Applying Full Haptic Clash");
+    }
+
+    
+
+    
+    
+
+    /*public void WallMaterialChange()
     {
 
     }
@@ -127,44 +332,8 @@ public class MazeManager : MonoBehaviour
 
         print("all");
     }
-
-    void DeactivateWalls(Transform parent, string tag)
-    {
-        GameObject[] walls = GetChildGameObjectsWithTag(parent, tag);
-        foreach (GameObject wall in walls)
-        {
-            if (wall != null)
-            {
-                wall.gameObject.SetActive(false);
-            }
-        }
-    }
-
-    void ActivateWalls(Transform parent, string tag)
-    {
-        GameObject[] walls = GetChildGameObjectsWithTag(parent, tag);
-        foreach (GameObject wall in walls)
-        {
-            if (wall != null)
-            {
-                wall.gameObject.SetActive(true);
-            }
-        }
-    }
-
-    GameObject[] GetChildGameObjectsWithTag(Transform parent, string tag)
-    {
-        List<GameObject> taggedObjects = new List<GameObject>();
-        foreach (Transform child in parent)
-        {
-            if (child.CompareTag(tag))
-            {
-                taggedObjects.Add(child.gameObject);
-            }
-        }
-        return taggedObjects.ToArray();
-        
-    }
     */
+
+
 
 }

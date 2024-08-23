@@ -6,15 +6,17 @@ TagManager:
   tags:
   - GameManager
   - MazeManager
-  - InvisbleWall
-  - MuteWall
-  - IntangableWall
-  - GhostWall
   - StartPoint
   - Ground
   - Hand
   - Wall
   - Goal
+  - Invisible
+  - VisualGhost
+  - Mute
+  - AudioGhost
+  - Intangable
+  - TangableGhost
   layers:
   - Default
   - TransparentFX

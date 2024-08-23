@@ -38,7 +38,12 @@ public class TrainingManager : MonoBehaviour
         goal.layer = LayerIgnoreRaycast;
         Debug.Log("Current layer: " + gameObject.layer);
         
-        FindObjectOfType<WallTouch>().isWallTouchEnabled = false;
+        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
+
+        foreach (WallTouch wallTouch in wallTouches)
+        {
+            wallTouch.isWallTouchEnabled = false;
+        }
 
         audioSourcePlayer = player.GetComponent<AudioSource>();
         audioSourcePlayerLeft = Left.GetComponent<AudioSource>();
@@ -131,7 +136,16 @@ public class TrainingManager : MonoBehaviour
     void ApplyVisualAudioHaptic()
     {
         visionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
-        audioSourcePlayer.volume = 0.5f;
+        
+        audioSourcePlayer.volume = 0.25f;
+        audioSourcePlayerLeft.volume = 0.5f;
+        audioSourcePlayerRight.volume = 0.5f;
+        
+        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
+        foreach (WallTouch wallTouch in wallTouches)
+        {
+            wallTouch.isWallTouchEnabled = true;
+        }
         Debug.Log("Applying all senses");
     }
 
@@ -141,7 +155,12 @@ public class TrainingManager : MonoBehaviour
         audioSourcePlayer.volume = 0f;
         audioSourcePlayerLeft.volume = 0f;
         audioSourcePlayerRight.volume = 0f;
-        FindObjectOfType<WallTouch>().isWallTouchEnabled = false;
+
+        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
+        foreach (WallTouch wallTouch in wallTouches)
+        {
+            wallTouch.isWallTouchEnabled = false;
+        }
         Debug.Log("Applying visual only");
     }
 
@@ -151,7 +170,11 @@ public class TrainingManager : MonoBehaviour
         audioSourcePlayer.volume = 0.25f;
         audioSourcePlayerLeft.volume = 0.5f;
         audioSourcePlayerRight.volume = 0.5f;
-        FindObjectOfType<WallTouch>().isWallTouchEnabled = false;
+        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
+        foreach (WallTouch wallTouch in wallTouches)
+        {
+            wallTouch.isWallTouchEnabled = false;
+        }
         Debug.Log("Applying audio only");
     }
 
@@ -161,7 +184,11 @@ public class TrainingManager : MonoBehaviour
         audioSourcePlayer.volume = 0f;
         audioSourcePlayerLeft.volume = 0f;
         audioSourcePlayerRight.volume = 0f;
-        FindObjectOfType<WallTouch>().isWallTouchEnabled = true;
+        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
+        foreach (WallTouch wallTouch in wallTouches)
+        {
+            wallTouch.isWallTouchEnabled = true;
+        }
         Debug.Log("Applying haptic only");
     }
 

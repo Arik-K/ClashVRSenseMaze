@@ -338,7 +338,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 2
+  m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -396,13 +396,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410087039}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalRotation: {x: 0.4644346, y: -0.22819166, z: 0.12213689, w: 0.8469425}
+  m_LocalPosition: {x: -0.99, y: 8.3, z: -4.41}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 122.601, y: 149.546, z: 179.46}
 --- !u!114 &410087042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -439,7 +439,7 @@ GameObject:
   - component: {fileID: 924306896}
   - component: {fileID: 924306895}
   m_Layer: 0
-  m_Name: SrartPointTraining
+  m_Name: startPointTraining
   m_TagString: StartPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -525,7 +525,7 @@ Transform:
   m_GameObject: {fileID: 924306894}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.85, y: 0, z: -0.25}
+  m_LocalPosition: {x: -0.606, y: 0, z: -1.043}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -843,7 +843,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1235153833}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -1022,7 +1022,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1503656639}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -1034,7 +1034,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 35e4f7f46c9f0e947a478e9f6478eece, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1288,6 +1288,11 @@ PrefabInstance:
     - target: {fileID: 3127377416852887305, guid: e367714f162349d48a5cb6f00133e149,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3127377416852887307, guid: e367714f162349d48a5cb6f00133e149,
+        type: 3}
+      propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3127377416852887310, guid: e367714f162349d48a5cb6f00133e149,
@@ -1850,7 +1855,7 @@ Transform:
   m_GameObject: {fileID: 8564356695603595734}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: -0.99, y: 1.57, z: -2.23}
+  m_LocalPosition: {x: -0.63, y: 1.57, z: -2.49}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4297,7 +4302,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0.38228822, y: 2.5, z: -3.4165745}
-  m_LocalScale: {x: 0.6, y: 1, z: 0.6}
+  m_LocalScale: {x: 0.45, y: 1, z: 0.45}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6864135999686675208}
@@ -4316,7 +4321,7 @@ Transform:
   m_GameObject: {fileID: 730151837205053875}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -1.03, y: 0, z: -0.25}
+  m_LocalPosition: {x: -0.6, y: 0, z: -0.99}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7539,9 +7544,9 @@ MonoBehaviour:
   continuousAudioSource: {fileID: 6766350892431284462}
   collisionAudioSource: {fileID: 2612639671297414872}
   collisionClip: {fileID: 8300000, guid: 2a7a7ebe75c3d3745a68b35039a6d5a0, type: 3}
-  minDistance: 1.5
-  minPitch: 0.5
-  maxPitch: 2
+  minDistance: 0.25
+  minPitch: 0
+  maxPitch: 0
   collisionDistanceThreshold: 0.24
 --- !u!82 &6766350892431284462
 AudioSource:
@@ -8042,10 +8047,10 @@ MonoBehaviour:
   xrOrigin: {fileID: 7009275031199792298}
   continuousAudioSource: {fileID: 7009275031199792304}
   collisionAudioSource: {fileID: 7009275031199792304}
-  collisionClip: {fileID: 8300000, guid: e4055bb7eb1b02946a1f89134ab5f5db, type: 3}
-  minDistance: 0.5
-  minPitch: 0.5
-  maxPitch: 2
+  collisionClip: {fileID: 8300000, guid: 69be87df0772b11489ba0545508ae04c, type: 3}
+  minDistance: 0.25
+  minPitch: 0
+  maxPitch: 0.5
   collisionDistanceThreshold: 0.1
 --- !u!82 &7009275031199792304
 AudioSource:
@@ -9543,10 +9548,10 @@ MonoBehaviour:
   xrOrigin: {fileID: 8753119860254775837}
   continuousAudioSource: {fileID: 8753119860254775841}
   collisionAudioSource: {fileID: 8753119860254775841}
-  collisionClip: {fileID: 8300000, guid: 841fe242278a1c047a576445dc7a3be1, type: 3}
-  minDistance: 0.5
-  minPitch: 0.5
-  maxPitch: 2
+  collisionClip: {fileID: 8300000, guid: 2dda382b02ef609499ef1093c020bfad, type: 3}
+  minDistance: 0.25
+  minPitch: 0
+  maxPitch: 0.5
   collisionDistanceThreshold: 0.1
 --- !u!114 &8855061482448100786
 MonoBehaviour:
