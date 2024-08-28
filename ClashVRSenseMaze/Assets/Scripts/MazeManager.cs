@@ -13,6 +13,11 @@ public class MazeManager : MonoBehaviour
     public GameObject visionPanel;// for visual off
     public GameObject player;
     
+    // maze objects
+    public GameObject InsideWalls;
+    public GameObject ChangingWalls;
+    public GameObject ChangingGoals;
+    
     // audio sources
     private AudioSource audioSourcePlayer;
     private AudioSource audioSourcePlayerLeft;
@@ -27,34 +32,96 @@ public class MazeManager : MonoBehaviour
     List<string> hapticTags = new List<string> { "Intangable", "TangableGhost" };
     
     private int ConditionCount;
-    private int currentTextureIndex = 0;
+  
     
     // Start is called before the first frame update
     void Start()
     {
+        // Check if the ChanginningWalls has been assigned
+        if (ChangingWalls == null)
+        {
+            Debug.LogError("No parent object assigned for Chaningwalls.");
+            return;
+        }
+        // Check if the ChanginningGoals has been assigned
+        if (ChangingGoals == null)
+        {
+            Debug.LogError("No parent object assigned for ChaningGoals.");
+            return;
+        }
         
+        // Check if the InsideWalls has been assigned
+        if (InsideWalls == null)
+        {
+            Debug.LogError("No parent object assigned for InsideWalls.");
+            return;
+        }
+ 
+
     }
 
-    // Update is called once per frame
-    /*public void ActivateMaze(string curr_maze)
-    {
-        print("Maze - " + curr_maze);
-        // Enable only current maze walls
-        foreach (Transform maze in transform)
-        {
-            if (maze.name == curr_maze)
-            {
-                maze.gameObject.SetActive(true);
-            }
-            else
-            {
-                maze.gameObject.SetActive(false);
-            }
-        }
-    }*/
 
+    //Define wall types for changing walls
+    void DefaultWall(GameObject wall)
+    {
+        wall.tag = "Wall";
+        wall.layer = LayerMask.NameToLayer("Default");
+        wall.GetComponent<MeshRenderer>().enabled = true;
+    }
     
-    public void NextMaze()
+    
+    
+    //Ghost Walls
+    void VisualGhostWall(GameObject wall)
+    {
+        wall.tag = "VisualGhost";
+        wall.layer = LayerMask.NameToLayer("Ignore Raycast");
+        wall.GetComponent<MeshRenderer>().enabled = true;
+    }
+
+    void AudioGhostWall(GameObject wall)
+    {
+        wall.tag = "AudioGhost";
+        wall.layer = LayerMask.NameToLayer("Default");
+        wall.GetComponent<MeshRenderer>().enabled = false;
+    }
+
+    void HapticGhostWall(GameObject wall)
+    {
+        wall.tag = "HapticGhost";
+        wall.layer = LayerMask.NameToLayer("Ignore Raycast");
+        wall.GetComponent<MeshRenderer>().enabled = false;
+    }
+
+    // other wall types
+
+    void InvisibleWall(GameObject wall)
+    {
+        wall.tag = "Invisble";
+        wall.layer = LayerMask.NameToLayer("Default");
+        wall.GetComponent<MeshRenderer>().enabled = false;
+    }
+
+    void MuteWall(GameObject wall)
+    {
+        wall.tag = "Mute";
+        wall.layer = LayerMask.NameToLayer("Ignore Raycast");
+        wall.GetComponent<MeshRenderer>().enabled = true;
+    }
+
+    void Intangable(GameObject wall)
+    {
+        wall.tag = "Intangable";
+        wall.layer = LayerMask.NameToLayer("Default");
+        wall.GetComponent<MeshRenderer>().enabled = true;
+    }
+    
+    // Maze Mechanism
+       public void ActivateMaze()
+    {
+
+    }
+    void NextMaze()
     {
 
         if (ConditionCount == conditions.Length)
@@ -67,7 +134,8 @@ public class MazeManager : MonoBehaviour
         ActivateCondition(conditions[ConditionCount]);
     }
 
-    public void ActivateCondition(string condition)
+    
+    void ActivateCondition(string condition)
     {
         switch (condition)
         {
@@ -112,15 +180,18 @@ public class MazeManager : MonoBehaviour
             // Special wall case
             /*case "invisible" when true:
                 ApplyInvisible();
-                break;   */
+                break;*/   
         }
 
         // Increment ConditionCount for the next maze
         ConditionCount++;
     }
 
+
+    // Conditions Implemintation
     void ApplyVisualAudioHaptic()
     {
+        // Define player senses
         visionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
         
         audioSourcePlayer.volume = 0.25f;
@@ -132,6 +203,10 @@ public class MazeManager : MonoBehaviour
         {
             wallTouch.isWallTouchEnabled = true;
         }
+        
+        //Define wall types
+        
+        
         Debug.Log("Applying all senses");
     }
 
@@ -296,44 +371,11 @@ public class MazeManager : MonoBehaviour
         Debug.Log("Applying Full Haptic Clash");
     }
 
-    
-
-    
-    
-
-    /*public void WallMaterialChange()
-    {
-
-    }
-
-    //Define every Maze Condition
-    void ApplyVisualAudioHaptic(string maze_name)
-    {
-        AudioSource audioSourcePlayer = player.GetComponent<AudioSource>();   
-        
-        Transform maze_transform = GameObject.Find(maze_name).transform;
-
-        // Turn off all visual walls
-        DeactivateWalls(maze_transform, "GhostWall");
-        DeactivateWalls(maze_transform, "InvisiWall");
-
-        // Turn off all audio walls
-        DeactivateWalls(maze_transform, "GhostSoundWall");
-        DeactivateWalls(maze_transform, "MuteWall");
-
-        // Turn on all morph walls
-        ActivateWalls(maze_transform, "MorphWall");
-
-        // Make sure Obstruction of view is off
-        ObscureObj.SetActive(false);
-
-        // Make sure listener is ON
-        audioSource3.volume = 0.5f;
-
-        print("all");
-    }
-    */
-
-
 
 }
+
+
+
+
+
+
