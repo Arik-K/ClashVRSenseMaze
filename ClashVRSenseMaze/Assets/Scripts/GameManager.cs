@@ -4,45 +4,70 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEditorInternal;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
     MazeManager mazeManager;
+    public GameObject player; // the player game object
+    public GameObject visionPanel; // to make no vision
+    public GameObject instructionPanel; // Reference to the panel containing instructions
+    public GameObject startPoint;
+    public GameObject maze;
 
-    public TextMeshProUGUI textMeshPro;
+    public GameObject Left;
+    public GameObject Right;
+
     
-    public GameObject[] mazes;
-    public GameObject[] startingPoints;
-    public GameObject[] goals;
-    public GameObject player;
-    public GameObject visionPanel;
-    public GameObject instructionPanel;
-
-    public static int mazeCount = 0;
-    private AudioSource audioSourcePlayer;
-    public static string maze_name = "Game";
+    public static int ConditionCount = 0;
+    public static int[] Paths = new int[] { 0, 1, 2, 3 };
 
     private float startTime;
-    public float timeBetweenMazes = 120f;
-    private WallTouch wallTouchScript;
+    public float timeBetweenMazes = 120f; // 2 minutes in seconds
+    public TextMeshProUGUI textMeshPro;
+    
+    // maze objects
+    public Dictionary<GameObject, GameObject> EndPath = new Dictionary<GameObject, GameObject>();
+    public List<GameObject> ChangingWalls = new List<GameObject>();
+    public List<GameObject> ChangingGoals = new List<GameObject>();
+     public List<GameObject> InsideWalls = new List<GameObject>();
+    
+    // audio sources
+    private AudioSource audioSourcePlayer;
+    private AudioSource audioSourcePlayerLeft;
+    private AudioSource audioSourcePlayerRight;
 
-    private bool isInMaze = false; // Flag to track if player is in a maze
 
+    public static string[] conditions = new string[] { "all", "visual_only", "audio_only", "haptic_only",
+        "visual_off", "audio_off", "haptic_off",
+        "visual_full_clash", "audio_full_clash", "haptic_full_clash"};
+    List<string> visualTags = new List<string> { "Ivisible", "VisualGhost" };
+    List<string> audioTags = new List<string> { "Mute", "AudioGhost" };
+    List<string> hapticTags = new List<string> { "Intangable", "TangableGhost" };
+    
     void Start()
     {
-        mazeCount = 0;
+        ConditionCount = 0;
+        List<int> Paths = new List<int> { 0, 1, 2, 3 };
         int LayerIgnoreRaycast = LayerMask.NameToLayer("Ignore Raycast");
-        foreach (GameObject goal in goals)
+        Debug.Log("Current layer: " + gameObject.layer);
+        
+        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
+
+        foreach (WallTouch wallTouch in wallTouches)
         {
-            goal.layer = LayerIgnoreRaycast;
+            wallTouch.isWallTouchEnabled = false;
         }
 
-        wallTouchScript = FindObjectOfType<WallTouch>();
-
         audioSourcePlayer = player.GetComponent<AudioSource>();
+        audioSourcePlayerLeft = Left.GetComponent<AudioSource>();
+        audioSourcePlayerRight = Right.GetComponent<AudioSource>();
         startTime = Time.time;
+
+        // Disable instruction panel at start
         instructionPanel.SetActive(false);
 
+        // Find the PlayerCollisions script and subscribe to the onFinish event.
         PlayerCollsions playerCollisions = FindObjectOfType<PlayerCollsions>();
         if (playerCollisions != null)
         {
@@ -53,58 +78,55 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("PlayerCollisions script not found!");
         }
-
     }
 
     private void OnFinish()
     {
-        goals[mazeCount - 1].SetActive(false); 
-        mazes[mazeCount-1].SetActive(false);
-        mazeCount++;
-        isInMaze = false;
-
-        if (mazeCount < mazes.Length) 
+        // Handle the finish event (e.g., start the next maze).
+        foreach( GameObject goal in ChangingGoals)
         {
-            startingPoints[mazeCount].SetActive(true);
-            visionPanel.SetActive(false);
+           goal.SetActive(false); 
         }
-        else 
-        {
-            SceneManager.LoadScene("MainMenuScene");
-        }
+        maze.SetActive(false);
+        startPoint.SetActive(true);
+        visionPanel.SetActive(false);
+        instructionPanel.SetActive(true);
+        UpdateTextNextLevelScreen(conditions[ConditionCount]);
+        
     }
 
     private void OnStartingPointCollision()
     {
+        startPoint.SetActive(false);
+        foreach( GameObject goal in ChangingGoals)
+        {
+           goal.SetActive(true); 
+        }
+        maze.SetActive(true);
 
-            startingPoints[mazeCount].SetActive(false);
-            goals[mazeCount].SetActive(true);
-
-            mazeManager.NextMaze();
-        
+        NextMaze();
+        //ActivateCondition(conditions[ConditionCount]);
     }
 
 
-
-   /* public void ActivateMaze(int mazeIndex)
+    void NextMaze()
     {
-        // Disable all mazes, starting points, and goals except for the selected one
-        for (int i = 0; i < mazes.Length; i++)
+        if (mazeManager == null)
         {
-            mazes[i].SetActive(i == mazeIndex);
-            startingPoints[i].SetActive(false);
-            goals[i].SetActive(i == mazeIndex);
+            Debug.LogError("mazeManager is not assigned.");
+            return;
+        }        
+
+        if (ConditionCount == conditions.Length)
+        {
+            SceneManager.LoadScene("MainMenuScene");
+            return;
         }
 
-        if (mazeIndex >= 0 && mazeIndex < mazes.Length && mazeIndex < startingPoints.Length && mazeIndex < goals.Length)
-        {
-            mazeCount++;
-        }
-        else
-        {
-            Debug.LogError("Invalid maze, starting point, or goal index: " + mazeIndex);
-        }
-    }*/
+        // Activate next condition
+        mazeManager.ActivateCondition(conditions[ConditionCount]);
+        mazeManager.SetPath(Paths[0]);
+    }
 
 
 

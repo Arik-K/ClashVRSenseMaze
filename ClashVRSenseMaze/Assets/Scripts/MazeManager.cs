@@ -14,9 +14,10 @@ public class MazeManager : MonoBehaviour
     public GameObject player;
     
     // maze objects
-    public GameObject InsideWalls;
-    public GameObject ChangingWalls;
-    public GameObject ChangingGoals;
+    public Dictionary<GameObject, GameObject> EndPath = new Dictionary<GameObject, GameObject>();
+    public List<GameObject> ChangingWalls = new List<GameObject>();
+    public List<GameObject> ChangingGoals = new List<GameObject>();
+     public List<GameObject> InsideWalls = new List<GameObject>();
     
     // audio sources
     private AudioSource audioSourcePlayer;
@@ -37,10 +38,9 @@ public class MazeManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Check if the ChanginningWalls has been assigned
         if (ChangingWalls == null)
         {
-            Debug.LogError("No parent object assigned for Chaningwalls.");
+            Debug.LogError("No parent object assigned for ChaningWalls.");
             return;
         }
         // Check if the ChanginningGoals has been assigned
@@ -50,13 +50,25 @@ public class MazeManager : MonoBehaviour
             return;
         }
         
-        // Check if the InsideWalls has been assigned
-        if (InsideWalls == null)
+        for (int i = 0; i < ChangingGoals.Count; i++)
         {
-            Debug.LogError("No parent object assigned for InsideWalls.");
-            return;
+            EndPath.Add(ChangingGoals[i], ChangingWalls[i]);
         }
- 
+        
+
+        /*// Check if the InsideWalls has been assigned
+        if (EndPath == null)
+        {
+            InsideWalls.Add(GameObject.Find("Wall1"));
+            InsideWalls.Add(GameObject.Find("Wall2"));
+            InsideWalls.Add(GameObject.Find("Goal1"));
+            InsideWalls.Add(GameObject.Find("Goal2"));
+        }
+
+        foreach(GameObject wall in InsideWalls)
+        {
+            DefaultWall(wall);
+        }*/
 
     }
 
@@ -68,7 +80,6 @@ public class MazeManager : MonoBehaviour
         wall.layer = LayerMask.NameToLayer("Default");
         wall.GetComponent<MeshRenderer>().enabled = true;
     }
-    
     
     
     //Ghost Walls
@@ -115,27 +126,33 @@ public class MazeManager : MonoBehaviour
         wall.layer = LayerMask.NameToLayer("Default");
         wall.GetComponent<MeshRenderer>().enabled = true;
     }
+
+
     
     // Maze Mechanism
-       public void ActivateMaze()
+    // Set walls and goals accordingly
+
+    public void SetPath(int path)
     {
+       foreach(GameObject Goal in ChangingGoals)
+       {
+        Goal.tag = "FalseGoal";
+       }
+       ChangingGoals[path].tag = "Goal";
 
+       foreach (GameObject wall in ChangingWalls)
+       {
+        wall.SetActive(true);
+       }
+       ChangingWalls[path].SetActive(false);
     }
-    void NextMaze()
-    {
 
-        if (ConditionCount == conditions.Length)
-        {
-            SceneManager.LoadScene("MainMenuScene");
-            return;
-        }
 
-        // Activate next condition
-        ActivateCondition(conditions[ConditionCount]);
-    }
+
+
 
     
-    void ActivateCondition(string condition)
+    public void ActivateCondition(string condition)
     {
         switch (condition)
         {
@@ -203,9 +220,6 @@ public class MazeManager : MonoBehaviour
         {
             wallTouch.isWallTouchEnabled = true;
         }
-        
-        //Define wall types
-        
         
         Debug.Log("Applying all senses");
     }
