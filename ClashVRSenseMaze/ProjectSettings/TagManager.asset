@@ -16,8 +16,8 @@ TagManager:
   - Mute
   - AudioGhost
   - Intangable
-  - TangableGhost
   - FalseGoal
+  - HapticGhost
   layers:
   - Default
   - TransparentFX

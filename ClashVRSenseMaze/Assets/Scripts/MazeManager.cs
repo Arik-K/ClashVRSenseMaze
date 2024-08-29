@@ -7,14 +7,18 @@ using System;
 
 public class MazeManager : MonoBehaviour
 {
+
     // The array of materials you want to use.
     //public Material[] materials; 
+    public int SelectedPath { get; private set; }
 
     //gameObjects for player
     public GameObject visionPanel;// for visual off
+    public GameObject OverLay; //A no peek Gaurdian
     public GameObject player;
     public GameObject Left;
     public GameObject Right;
+    public GameObject gameManager;
     
     // maze objects
     //public Dictionary<GameObject, GameObject> EndPath = new Dictionary<GameObject, GameObject>();
@@ -26,10 +30,11 @@ public class MazeManager : MonoBehaviour
     private AudioSource audioSourcePlayer;
     private AudioSource audioSourcePlayerLeft;
     private AudioSource audioSourcePlayerRight;
+    private AudioSource audioSourcePlayerCollision;
 
     public static string[] conditions = new string[] { "all", "visual_only", "audio_only", "haptic_only",
         "visual_off", "audio_off", "haptic_off",
-        "visual_full_clash", "audio_full_clash", "haptic_full_clash"};
+        "visual_full_clash", "audio_full_clash", "haptic_full_clash", "Invisible"};
     List<string> visualTags = new List<string> { "Ivisible", "VisualGhost" };
     List<string> audioTags = new List<string> { "Mute", "AudioGhost" };
     List<string> hapticTags = new List<string> { "Intangable", "TangableGhost" };
@@ -60,21 +65,7 @@ public class MazeManager : MonoBehaviour
         audioSourcePlayer = player.GetComponent<AudioSource>();
         audioSourcePlayerLeft = Left.GetComponent<AudioSource>();
         audioSourcePlayerRight = Right.GetComponent<AudioSource>();
-        
-
-        /*// Check if the InsideWalls has been assigned
-        if (EndPath == null)
-        {
-            InsideWalls.Add(GameObject.Find("Wall1"));
-            InsideWalls.Add(GameObject.Find("Wall2"));
-            InsideWalls.Add(GameObject.Find("Goal1"));
-            InsideWalls.Add(GameObject.Find("Goal2"));
-        }
-
-        foreach(GameObject wall in InsideWalls)
-        {
-            DefaultWall(wall);
-        }*/
+        audioSourcePlayerCollision = gameManager.GetComponent<AudioSource>();
 
     }
 
@@ -87,7 +78,7 @@ public class MazeManager : MonoBehaviour
         wall.GetComponent<MeshRenderer>().enabled = true;
     }
     
-    
+
     //Ghost Walls
     void VisualGhostWall(GameObject wall)
     {
@@ -111,10 +102,9 @@ public class MazeManager : MonoBehaviour
     }
 
     // other wall types
-
     void InvisibleWall(GameObject wall)
     {
-        wall.tag = "Invisble";
+        wall.tag = "Invisible";
         wall.layer = LayerMask.NameToLayer("Default");
         wall.GetComponent<MeshRenderer>().enabled = false;
     }
@@ -137,14 +127,13 @@ public class MazeManager : MonoBehaviour
     
     // Maze Mechanism
     // Set walls and goals accordingly
-
-    public void SetPath(int[] paths)
+    public int SetPath(int[] paths)
     {
         // Check if paths list is not empty
         if (paths == null || paths.Length == 0)
         {
             Debug.LogError("Paths list is empty or null!");
-            return;
+            return -1;
         }
 
         // Create a Random object to pick a random index
@@ -163,12 +152,62 @@ public class MazeManager : MonoBehaviour
         wall.SetActive(true);
        }
        ChangingWalls[path].SetActive(false);
+
+        return path;
     }
+    public void SetSelectedPath(int path)
+{
+    SelectedPath = path;
+    
+}
 
+    public void setWallsForClashAndInvisbleScenarios(string wallType)
+    {
+        
+        switch (wallType){
+            case "Vision" when true:
 
+                foreach(GameObject ChangingWall in ChangingWalls)
+                {
+                    InvisibleWall(ChangingWall);     
+                }
 
+                VisualGhostWall(ChangingWalls[SelectedPath]);
+            break;
+            
+            case "Audio" when true:
 
+                foreach(GameObject ChangingWall in ChangingWalls)
+                {
+                    MuteWall(ChangingWall);     
+                }
 
+                AudioGhostWall(ChangingWalls[SelectedPath]);
+            break;            
+            
+            case "Haptic" when true:
+
+                foreach(GameObject ChangingWall in ChangingWalls)
+                {
+                    Intangable(ChangingWall);     
+                }
+
+                HapticGhostWall(ChangingWalls[SelectedPath]);
+            break;
+
+            case "Invisble" when true:
+                foreach(GameObject InsidegWall in InsideWalls)
+                {
+                    InvisibleWall(InsidegWall);     
+                }
+                foreach(GameObject ChangingWall in ChangingWalls)
+                {
+                    InvisibleWall(ChangingWall);     
+                }
+            break;
+        }
+
+    }
     
     public void ActivateCondition(string condition)
     {
@@ -213,9 +252,9 @@ public class MazeManager : MonoBehaviour
                 break;
 
             // Special wall case
-            /*case "invisible" when true:
+            case "invisible" when true:
                 ApplyInvisible();
-                break;*/   
+                break;  
         }
 
 
@@ -233,10 +272,13 @@ public class MazeManager : MonoBehaviour
         }
         // Define player senses
         visionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
-        
+        OverLay.SetActive(true);
+
         audioSourcePlayer.volume = 0.25f;
+        audioSourcePlayerCollision.volume = 0.25f;
         audioSourcePlayerLeft.volume = 0.5f;
         audioSourcePlayerRight.volume = 0.5f;
+        
         
         WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
         foreach (WallTouch wallTouch in wallTouches)
@@ -250,7 +292,10 @@ public class MazeManager : MonoBehaviour
     void ApplyVisual()
     {
         visionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
+        OverLay.SetActive(true);
+
         audioSourcePlayer.volume = 0f;
+        audioSourcePlayerCollision.volume = 0f;
         audioSourcePlayerLeft.volume = 0f;
         audioSourcePlayerRight.volume = 0f;
 
@@ -265,8 +310,10 @@ public class MazeManager : MonoBehaviour
     void ApplyAudio()
     {
         visionPanel.SetActive(true); // Assuming VisionPanel is properly initialized in Start()
-        
+        OverLay.SetActive(false);
+
         audioSourcePlayer.volume = 0.25f;
+        audioSourcePlayerCollision.volume = 0.25f;
         audioSourcePlayerLeft.volume = 0.5f;
         audioSourcePlayerRight.volume = 0.5f;
         
@@ -281,8 +328,10 @@ public class MazeManager : MonoBehaviour
     void ApplyHaptic()
     {
         visionPanel.SetActive(true); // Assuming VisionPanel is properly initialized in Start()
-        
+        OverLay.SetActive(false);
+
         audioSourcePlayer.volume = 0f;
+        audioSourcePlayerCollision.volume = 0f;
         audioSourcePlayerLeft.volume = 0f;
         audioSourcePlayerRight.volume = 0f;
        
@@ -298,9 +347,11 @@ public class MazeManager : MonoBehaviour
     {
         // Visual Conditions
         visionPanel.SetActive(false);
+        OverLay.SetActive(true);
 
         // Audio Conditions
         audioSourcePlayer.volume = 0f;
+        audioSourcePlayerCollision.volume = 0f;
         audioSourcePlayerLeft.volume = 0f;
         audioSourcePlayerRight.volume = 0f;
        
@@ -318,9 +369,11 @@ public class MazeManager : MonoBehaviour
     {
         // Visual Conditions
         visionPanel.SetActive(true);
+        OverLay.SetActive(false);
 
         // Audio Conditions
         audioSourcePlayer.volume = 0.25f;
+        audioSourcePlayerCollision.volume = 0.25f;
         audioSourcePlayerLeft.volume = 0.5f;
         audioSourcePlayerRight.volume = 0.5f;
        
@@ -338,9 +391,11 @@ public class MazeManager : MonoBehaviour
     {
         // Visual Conditions
         visionPanel.SetActive(false);
+        OverLay.SetActive(true);
 
         // Audio Conditions
         audioSourcePlayer.volume = 0.25f;
+        audioSourcePlayerCollision.volume = 0.25f;
         audioSourcePlayerLeft.volume = 0.5f;
         audioSourcePlayerRight.volume = 0.5f;
        
@@ -358,10 +413,25 @@ public class MazeManager : MonoBehaviour
 
     void ApplyVisualFullClash()
     {
+        // Visual Conditions
+        visionPanel.SetActive(false);
+        OverLay.SetActive(true);
+
+        // Audio Conditions
+        audioSourcePlayer.volume = 0.25f;
+        audioSourcePlayerCollision.volume = 0.25f;
+        audioSourcePlayerLeft.volume = 0.5f;
+        audioSourcePlayerRight.volume = 0.5f;
+       
+       // Haptic Conditions
+        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
+        foreach (WallTouch wallTouch in wallTouches)
+        {
+            wallTouch.isWallTouchEnabled = true;
+        }
 
 
-
-
+        setWallsForClashAndInvisbleScenarios("Vision");
         
         Debug.Log("Applying Full Visual Clash");
 
@@ -371,9 +441,11 @@ public class MazeManager : MonoBehaviour
     {
         // Visual Conditions
         visionPanel.SetActive(false);
+        OverLay.SetActive(true);
 
         // Audio Conditions
         audioSourcePlayer.volume = 0.25f;
+        audioSourcePlayerCollision.volume = 0.25f;
         audioSourcePlayerLeft.volume = 0.5f;
         audioSourcePlayerRight.volume = 0.5f;
        
@@ -384,6 +456,7 @@ public class MazeManager : MonoBehaviour
             wallTouch.isWallTouchEnabled = true;
         }
         
+        setWallsForClashAndInvisbleScenarios("Audio");
         Debug.Log("Applying Full Visual Clash");
 
     }
@@ -391,9 +464,11 @@ public class MazeManager : MonoBehaviour
     {
         // Visual Conditions
         visionPanel.SetActive(false);
+        OverLay.SetActive(true);
 
         // Audio Conditions
         audioSourcePlayer.volume = 0.25f;
+        audioSourcePlayerCollision.volume = 0.25f;
         audioSourcePlayerLeft.volume = 0.5f;
         audioSourcePlayerRight.volume = 0.5f;
        
@@ -403,7 +478,29 @@ public class MazeManager : MonoBehaviour
         {
             wallTouch.isWallTouchEnabled = true;
         }
-        
+        setWallsForClashAndInvisbleScenarios("Haptic");
+        Debug.Log("Applying Full Haptic Clash");
+    }
+
+    void ApplyInvisible()
+    {
+        // Visual Conditions
+        visionPanel.SetActive(false);
+        OverLay.SetActive(true);
+
+        // Audio Conditions
+        audioSourcePlayer.volume = 0.25f;
+        audioSourcePlayerCollision.volume = 0.25f;
+        audioSourcePlayerLeft.volume = 0.5f;
+        audioSourcePlayerRight.volume = 0.5f;
+       
+       // Haptic Conditions
+        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
+        foreach (WallTouch wallTouch in wallTouches)
+        {
+            wallTouch.isWallTouchEnabled = true;
+        }
+        setWallsForClashAndInvisbleScenarios("Invisible");
         Debug.Log("Applying Full Haptic Clash");
     }
 

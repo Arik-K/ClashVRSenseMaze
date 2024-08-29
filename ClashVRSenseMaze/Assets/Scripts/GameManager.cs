@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEditorInternal;
 using Unity.VisualScripting;
+using JetBrains.Annotations;
 
 public class GameManager : MonoBehaviour
 {
@@ -95,6 +96,7 @@ public class GameManager : MonoBehaviour
     private void OnStartingPointCollision()
     {
         startPoint.SetActive(false);
+        instructionPanel.SetActive(false);
         foreach( GameObject goal in ChangingGoals)
         {
            goal.SetActive(true); 
@@ -122,7 +124,8 @@ public class GameManager : MonoBehaviour
 
         // Activate next condition
         mazeManager.ActivateCondition(conditions[ConditionCount]);
-        mazeManager.SetPath(Paths);
+        int activePath = mazeManager.SetPath(Paths);
+        mazeManager.SetSelectedPath(activePath);
     // Increment ConditionCount for the next maze
         ConditionCount++;
 
@@ -173,10 +176,10 @@ public class GameManager : MonoBehaviour
             textMeshPro.text = "Next Maze: Trust Visual and Audio, Haptic Could Be Misleading";
             break;
 
-        // Special wall case
-        /*case "invisible" when true:
+        //Special wall case
+        case "invisible" when true:
             textMeshPro.text = "Trust Audio and Haptic, Visual Could Be Misleading";
-            break;  */
+            break;
 
       } 
     
