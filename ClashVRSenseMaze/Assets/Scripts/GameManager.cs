@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
-using UnityEditorInternal;
-using Unity.VisualScripting;
-using JetBrains.Annotations;
+
 
 public class GameManager : MonoBehaviour
 {
