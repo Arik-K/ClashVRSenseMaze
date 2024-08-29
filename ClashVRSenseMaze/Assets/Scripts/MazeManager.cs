@@ -3,27 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using System;
 
 public class MazeManager : MonoBehaviour
 {
     // The array of materials you want to use.
-    public Material[] materials; 
+    //public Material[] materials; 
 
-    //gameObjects
+    //gameObjects for player
     public GameObject visionPanel;// for visual off
     public GameObject player;
+    public GameObject Left;
+    public GameObject Right;
     
     // maze objects
-    public Dictionary<GameObject, GameObject> EndPath = new Dictionary<GameObject, GameObject>();
+    //public Dictionary<GameObject, GameObject> EndPath = new Dictionary<GameObject, GameObject>();
     public List<GameObject> ChangingWalls = new List<GameObject>();
     public List<GameObject> ChangingGoals = new List<GameObject>();
-     public List<GameObject> InsideWalls = new List<GameObject>();
+    public List<GameObject> InsideWalls = new List<GameObject>();
     
     // audio sources
     private AudioSource audioSourcePlayer;
     private AudioSource audioSourcePlayerLeft;
     private AudioSource audioSourcePlayerRight;
-
 
     public static string[] conditions = new string[] { "all", "visual_only", "audio_only", "haptic_only",
         "visual_off", "audio_off", "haptic_off",
@@ -32,12 +34,12 @@ public class MazeManager : MonoBehaviour
     List<string> audioTags = new List<string> { "Mute", "AudioGhost" };
     List<string> hapticTags = new List<string> { "Intangable", "TangableGhost" };
     
-    private int ConditionCount;
   
     
     // Start is called before the first frame update
     void Start()
     {
+        int[] Paths = new int[] { 0, 1, 2, 3 };
         if (ChangingWalls == null)
         {
             Debug.LogError("No parent object assigned for ChaningWalls.");
@@ -52,8 +54,12 @@ public class MazeManager : MonoBehaviour
         
         for (int i = 0; i < ChangingGoals.Count; i++)
         {
-            EndPath.Add(ChangingGoals[i], ChangingWalls[i]);
+            //EndPath.Add(ChangingGoals[i], ChangingWalls[i]);
         }
+
+        audioSourcePlayer = player.GetComponent<AudioSource>();
+        audioSourcePlayerLeft = Left.GetComponent<AudioSource>();
+        audioSourcePlayerRight = Right.GetComponent<AudioSource>();
         
 
         /*// Check if the InsideWalls has been assigned
@@ -132,8 +138,20 @@ public class MazeManager : MonoBehaviour
     // Maze Mechanism
     // Set walls and goals accordingly
 
-    public void SetPath(int path)
+    public void SetPath(int[] paths)
     {
+        // Check if paths list is not empty
+        if (paths == null || paths.Length == 0)
+        {
+            Debug.LogError("Paths list is empty or null!");
+            return;
+        }
+
+        // Create a Random object to pick a random index
+        System.Random random = new System.Random();
+        int randomIndex = random.Next(paths.Length);  // Get a random index
+        int path = paths[randomIndex];
+
        foreach(GameObject Goal in ChangingGoals)
        {
         Goal.tag = "FalseGoal";
@@ -200,14 +218,19 @@ public class MazeManager : MonoBehaviour
                 break;*/   
         }
 
-        // Increment ConditionCount for the next maze
-        ConditionCount++;
+
+
     }
 
 
     // Conditions Implemintation
     void ApplyVisualAudioHaptic()
     {
+        if (audioSourcePlayerRight == null)
+        {
+            Debug.LogError("One or more required components are not assigned.");
+            return;
+        }
         // Define player senses
         visionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
         
@@ -335,7 +358,6 @@ public class MazeManager : MonoBehaviour
 
     void ApplyVisualFullClash()
     {
-        ApplyVisualAudioHaptic();
 
 
 

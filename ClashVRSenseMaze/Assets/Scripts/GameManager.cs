@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     public GameObject Right;
 
     
-    public static int ConditionCount = 0;
+    public static int ConditionCount = 1;
     public static int[] Paths = new int[] { 0, 1, 2, 3 };
 
     private float startTime;
@@ -27,10 +27,8 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI textMeshPro;
     
     // maze objects
-    public Dictionary<GameObject, GameObject> EndPath = new Dictionary<GameObject, GameObject>();
-    public List<GameObject> ChangingWalls = new List<GameObject>();
     public List<GameObject> ChangingGoals = new List<GameObject>();
-     public List<GameObject> InsideWalls = new List<GameObject>();
+
     
     // audio sources
     private AudioSource audioSourcePlayer;
@@ -48,12 +46,11 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         ConditionCount = 0;
-        List<int> Paths = new List<int> { 0, 1, 2, 3 };
+        mazeManager = maze.GetComponent<MazeManager>();
         int LayerIgnoreRaycast = LayerMask.NameToLayer("Ignore Raycast");
         Debug.Log("Current layer: " + gameObject.layer);
         
         WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
-
         foreach (WallTouch wallTouch in wallTouches)
         {
             wallTouch.isWallTouchEnabled = false;
@@ -88,8 +85,8 @@ public class GameManager : MonoBehaviour
            goal.SetActive(false); 
         }
         maze.SetActive(false);
-        startPoint.SetActive(true);
         visionPanel.SetActive(false);
+        startPoint.SetActive(true);
         instructionPanel.SetActive(true);
         UpdateTextNextLevelScreen(conditions[ConditionCount]);
         
@@ -125,7 +122,10 @@ public class GameManager : MonoBehaviour
 
         // Activate next condition
         mazeManager.ActivateCondition(conditions[ConditionCount]);
-        mazeManager.SetPath(Paths[0]);
+        mazeManager.SetPath(Paths);
+    // Increment ConditionCount for the next maze
+        ConditionCount++;
+
     }
 
 
@@ -147,7 +147,7 @@ public class GameManager : MonoBehaviour
         case "visual_only" when true:
         textMeshPro.text = "Next Maze: Only Visual";
               break;
-        case "Haptic_only" when true:
+        case "haptic_only" when true:
             textMeshPro.text = "Next Maze: Only Haptic";
               break;
         

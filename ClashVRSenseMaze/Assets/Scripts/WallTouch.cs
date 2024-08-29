@@ -14,7 +14,7 @@ public class WallTouch : MonoBehaviour
     {
         if (!isWallTouchEnabled) return;
         
-        if (other.gameObject.CompareTag("Wall") ||other.gameObject.CompareTag("Mute"))
+        if (other.gameObject.CompareTag("Wall") ||other.gameObject.CompareTag("Mute") || other.gameObject.CompareTag("HapticGhost")|| other.gameObject.CompareTag("Invisible"))
         {
             if (hapticCoroutine == null)
             {

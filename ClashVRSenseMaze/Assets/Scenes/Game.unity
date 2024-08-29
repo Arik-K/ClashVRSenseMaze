@@ -3687,7 +3687,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -4691,7 +4691,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -4832,10 +4832,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 209191458}
+  - {fileID: 1430220960}
   - {fileID: 1424742520}
   - {fileID: 605266561}
-  - {fileID: 1430220960}
+  - {fileID: 209191458}
   m_Father: {fileID: 1696572925}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &857638939
@@ -5155,7 +5155,6 @@ GameObject:
   - component: {fileID: 911231544}
   - component: {fileID: 911231547}
   - component: {fileID: 911231549}
-  - component: {fileID: 911231548}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: GameManager
@@ -5295,29 +5294,6 @@ MonoBehaviour:
   Left: {fileID: 915089723}
   Right: {fileID: 1610382350}
   timeBetweenMazes: 120
---- !u!114 &911231548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 911231543}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04654974a95c47545ab9ef05689dea94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  materials: []
-  visionPanel: {fileID: 0}
-  player: {fileID: 0}
-  ChangingWalls: []
-  ChangingGoals: []
-  InsideWalls:
-  - {fileID: 446262816}
-  - {fileID: 2113292070}
-  - {fileID: 1842688115}
-  - {fileID: 1147581219}
-  - {fileID: 206149660}
 --- !u!114 &911231549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5339,22 +5315,11 @@ MonoBehaviour:
   Right: {fileID: 1610382350}
   timeBetweenMazes: 120
   textMeshPro: {fileID: 1713988366}
-  ChangingWalls:
-  - {fileID: 1430220959}
-  - {fileID: 1424742519}
-  - {fileID: 605266560}
-  - {fileID: 209191457}
   ChangingGoals:
   - {fileID: 575591859}
   - {fileID: 2056764191}
   - {fileID: 724445236}
   - {fileID: 723730041}
-  InsideWalls:
-  - {fileID: 446262816}
-  - {fileID: 2113292070}
-  - {fileID: 1842688115}
-  - {fileID: 1147581219}
-  - {fileID: 206149660}
 --- !u!1 &915089723
 GameObject:
   m_ObjectHideFlags: 0
@@ -8210,7 +8175,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1165329234}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2.84}
+  m_LocalPosition: {x: 0, y: 0, z: 2.95}
   m_LocalScale: {x: 0.025405698, y: 0.025358232, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13707,6 +13672,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1696572925}
+  - component: {fileID: 1696572926}
   m_Layer: 0
   m_Name: maze5
   m_TagString: Untagged
@@ -13737,6 +13703,38 @@ Transform:
   - {fileID: 2023972229}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &1696572926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1696572924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04654974a95c47545ab9ef05689dea94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visionPanel: {fileID: 1853996223}
+  player: {fileID: 1347647253}
+  ChangingWalls:
+  - {fileID: 1430220959}
+  - {fileID: 1424742519}
+  - {fileID: 605266560}
+  - {fileID: 209191457}
+  ChangingGoals:
+  - {fileID: 575591859}
+  - {fileID: 2056764191}
+  - {fileID: 724445236}
+  - {fileID: 723730041}
+  InsideWalls:
+  - {fileID: 446262816}
+  - {fileID: 2113292070}
+  - {fileID: 1842688115}
+  - {fileID: 1147581219}
+  - {fileID: 206149660}
+  Left: {fileID: 915089723}
+  Right: {fileID: 1610382350}
 --- !u!1 &1713988364
 GameObject:
   m_ObjectHideFlags: 0
@@ -15048,8 +15046,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1905712289}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.22, y: 0.15, z: -1.71}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.22000003, y: 0.1500001, z: -1.71}
   m_LocalScale: {x: 0.5, y: 1, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -15684,7 +15682,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -16184,9 +16182,9 @@ SceneRoots:
   - {fileID: 1319947662}
   - {fileID: 1542061779}
   - {fileID: 1008085459}
-  - {fileID: 1905712293}
   - {fileID: 611016763}
   - {fileID: 1696572925}
+  - {fileID: 1905712293}
   - {fileID: 911231545}
   - {fileID: 1189703274}
   - {fileID: 1165329239}
