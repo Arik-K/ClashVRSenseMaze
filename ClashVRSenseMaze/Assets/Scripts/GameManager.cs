@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
 
     public static string[] conditions = new string[] { "all", "visual_only", "audio_only", "haptic_only",
         "visual_off", "audio_off", "haptic_off",
-        "visual_full_clash", "audio_full_clash", "haptic_full_clash"};
+        "visual_full_clash", "audio_full_clash", "haptic_full_clash", "Invisible"};
     List<string> visualTags = new List<string> { "Ivisible", "VisualGhost" };
     List<string> audioTags = new List<string> { "Mute", "AudioGhost" };
     List<string> hapticTags = new List<string> { "Intangable", "TangableGhost" };
@@ -138,15 +138,15 @@ public class GameManager : MonoBehaviour
       {
                         // Deafult case all senses
         case "all" when true:
-            textMeshPro.text = "Next Maze: Trust all senses";
+            textMeshPro.text = "Next Maze:\nTrust all senses";
             break;
       
         // Only one sensory channel active
         case "audio_only" when true:
-            textMeshPro.text = "Next Maze: Only Audio";
+            textMeshPro.text = "Next Maze:\nOnly Audio";
               break;
         case "visual_only" when true:
-        textMeshPro.text = "Next Maze: Only Visual";
+        textMeshPro.text = "Next Maze:\nOnly Visual";
               break;
         case "haptic_only" when true:
             textMeshPro.text = "Next Maze: Only Haptic";
@@ -154,29 +154,29 @@ public class GameManager : MonoBehaviour
         
         // only Two sensory channels - One off
         case "audio_off" when true:
-            textMeshPro.text = "Next Maze: Trust Visual and Haptic";
+            textMeshPro.text = "Next Maze:\nTrust Visual and Haptic";
             break;
         case "visual_off" when true:
-            textMeshPro.text = "Next Maze: Trust Audio and Haptic";
+            textMeshPro.text = "Next Maze:\nTrust Audio and Haptic";
             break;
         case "Haptic_off" when true:
-            textMeshPro.text = "Next Maze: Trust Visual and Audio";
+            textMeshPro.text = "Next Maze:\nTrust Visual and Audio";
             break;
 
         // Full clash with one sesnory channel
         case "audio_full_clash" when true:
-            textMeshPro.text = "Next Maze: Trust Visual and Haptic, Audio Could Be Misleading";
+            textMeshPro.text = "Next Maze:\nTrust Visual and Haptic, Audio Could Be Misleading";
             break;
         case "visual_full_clash" when true:
-            textMeshPro.text = "Next Maze: Trust Audio and Haptic, Visual Could Be Misleading";
+            textMeshPro.text = "Next Maze:\nTrust Audio and Haptic, Visual Could Be Misleading";
             break;
         case "Haptic_full_clash" when true:
-            textMeshPro.text = "Next Maze: Trust Visual and Audio, Haptic Could Be Misleading";
+            textMeshPro.text = "Next Maze:\nTrust Visual and Audio, Haptic Could Be Misleading";
             break;
 
         //Special wall case
         case "invisible" when true:
-            textMeshPro.text = "Trust Audio and Haptic, Visual Could Be Misleading";
+            textMeshPro.text = "Next Maze:\nTrust Audio and Haptic, Visual Could Be Misleading";
             break;
 
       } 

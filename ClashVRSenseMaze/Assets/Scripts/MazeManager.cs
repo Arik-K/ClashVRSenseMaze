@@ -161,10 +161,18 @@ public class MazeManager : MonoBehaviour
     
 }
 
-    public void setWallsForClashAndInvisbleScenarios(string wallType)
+    public void setWalls(string wallType)
     {
         
         switch (wallType){
+            case "Default" when true:
+
+                foreach(GameObject ChangingWall in ChangingWalls)
+                {
+                    DefaultWall(ChangingWall);     
+                }
+            break;
+
             case "Vision" when true:
 
                 foreach(GameObject ChangingWall in ChangingWalls)
@@ -208,6 +216,23 @@ public class MazeManager : MonoBehaviour
         }
 
     }
+
+        public void PlayerModalityAndLimits(bool EnableVision,bool EnableOverLay,float PlayerSound, float HandsSound, bool touch)
+        {
+            visionPanel.SetActive(EnableVision);
+            OverLay.SetActive(EnableOverLay);
+
+            audioSourcePlayer.volume = PlayerSound;
+            audioSourcePlayerCollision.volume = PlayerSound;
+            audioSourcePlayerLeft.volume = HandsSound;
+            audioSourcePlayerRight.volume = HandsSound;
+
+            WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
+            foreach (WallTouch wallTouch in wallTouches)
+            {
+                wallTouch.isWallTouchEnabled = touch;
+            }
+        }
     
     public void ActivateCondition(string condition)
     {
@@ -265,242 +290,79 @@ public class MazeManager : MonoBehaviour
     // Conditions Implemintation
     void ApplyVisualAudioHaptic()
     {
-        if (audioSourcePlayerRight == null)
-        {
-            Debug.LogError("One or more required components are not assigned.");
-            return;
-        }
-        // Define player senses
-        visionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
-        OverLay.SetActive(true);
-
-        audioSourcePlayer.volume = 0.25f;
-        audioSourcePlayerCollision.volume = 0.25f;
-        audioSourcePlayerLeft.volume = 0.5f;
-        audioSourcePlayerRight.volume = 0.5f;
-        
-        
-        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
-        foreach (WallTouch wallTouch in wallTouches)
-        {
-            wallTouch.isWallTouchEnabled = true;
-        }
-        
+        PlayerModalityAndLimits(false, true, 0.25f, 0.5f, true);
+        setWalls("Default");
         Debug.Log("Applying all senses");
     }
-
     void ApplyVisual()
     {
-        visionPanel.SetActive(false); // Assuming VisionPanel is properly initialized in Start()
-        OverLay.SetActive(true);
-
-        audioSourcePlayer.volume = 0f;
-        audioSourcePlayerCollision.volume = 0f;
-        audioSourcePlayerLeft.volume = 0f;
-        audioSourcePlayerRight.volume = 0f;
-
-        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
-        foreach (WallTouch wallTouch in wallTouches)
-        {
-            wallTouch.isWallTouchEnabled = false;
-        }
+        PlayerModalityAndLimits(false, true, 0f, 0f, false);
+        setWalls("Default");
         Debug.Log("Applying visual only");
     }
 
     void ApplyAudio()
     {
-        visionPanel.SetActive(true); // Assuming VisionPanel is properly initialized in Start()
-        OverLay.SetActive(false);
-
-        audioSourcePlayer.volume = 0.25f;
-        audioSourcePlayerCollision.volume = 0.25f;
-        audioSourcePlayerLeft.volume = 0.5f;
-        audioSourcePlayerRight.volume = 0.5f;
-        
-        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
-        foreach (WallTouch wallTouch in wallTouches)
-        {
-            wallTouch.isWallTouchEnabled = false;
-        }
+        PlayerModalityAndLimits(true, false, 0.25f, 0.5f, false);
+        setWalls("Default");
         Debug.Log("Applying audio only");
     }
 
     void ApplyHaptic()
     {
-        visionPanel.SetActive(true); // Assuming VisionPanel is properly initialized in Start()
-        OverLay.SetActive(false);
-
-        audioSourcePlayer.volume = 0f;
-        audioSourcePlayerCollision.volume = 0f;
-        audioSourcePlayerLeft.volume = 0f;
-        audioSourcePlayerRight.volume = 0f;
-       
-       WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
-        foreach (WallTouch wallTouch in wallTouches)
-        {
-            wallTouch.isWallTouchEnabled = true;
-        }
+        PlayerModalityAndLimits(true, false, 0f, 0f, true);
+        setWalls("Default");
         Debug.Log("Applying haptic only");
     }
 
     void ApplyAudioOff()
     {
-        // Visual Conditions
-        visionPanel.SetActive(false);
-        OverLay.SetActive(true);
-
-        // Audio Conditions
-        audioSourcePlayer.volume = 0f;
-        audioSourcePlayerCollision.volume = 0f;
-        audioSourcePlayerLeft.volume = 0f;
-        audioSourcePlayerRight.volume = 0f;
-       
-       // Haptic Consditions
-        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
-        foreach (WallTouch wallTouch in wallTouches)
-        {
-            wallTouch.isWallTouchEnabled = true;
-        }
+        PlayerModalityAndLimits(false, true, 0f, 0f, true);
+        setWalls("Default");
         Debug.Log("Applying Audio off");
 
     }
     
     void ApplyVisualOff()
     {
-        // Visual Conditions
-        visionPanel.SetActive(true);
-        OverLay.SetActive(false);
-
-        // Audio Conditions
-        audioSourcePlayer.volume = 0.25f;
-        audioSourcePlayerCollision.volume = 0.25f;
-        audioSourcePlayerLeft.volume = 0.5f;
-        audioSourcePlayerRight.volume = 0.5f;
-       
-       // Haptic Consditions
-        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
-        foreach (WallTouch wallTouch in wallTouches)
-        {
-            wallTouch.isWallTouchEnabled = true;
-        }
+        PlayerModalityAndLimits(true, false, 0.25f, 0.5f, true);
+        setWalls("Default");
         Debug.Log("Applying viusal off");
 
     }
 
     void ApplyHapticOff()
     {
-        // Visual Conditions
-        visionPanel.SetActive(false);
-        OverLay.SetActive(true);
-
-        // Audio Conditions
-        audioSourcePlayer.volume = 0.25f;
-        audioSourcePlayerCollision.volume = 0.25f;
-        audioSourcePlayerLeft.volume = 0.5f;
-        audioSourcePlayerRight.volume = 0.5f;
-       
-       // Haptic Consditions
-        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
-        foreach (WallTouch wallTouch in wallTouches)
-        {
-            wallTouch.isWallTouchEnabled = false;
-        }
+        PlayerModalityAndLimits(false, true, 0.25f, 0.5f, false);
+        setWalls("Default");        
         Debug.Log("Applying haptic only");
 
     }
 
-    
-
     void ApplyVisualFullClash()
     {
-        // Visual Conditions
-        visionPanel.SetActive(false);
-        OverLay.SetActive(true);
-
-        // Audio Conditions
-        audioSourcePlayer.volume = 0.25f;
-        audioSourcePlayerCollision.volume = 0.25f;
-        audioSourcePlayerLeft.volume = 0.5f;
-        audioSourcePlayerRight.volume = 0.5f;
-       
-       // Haptic Conditions
-        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
-        foreach (WallTouch wallTouch in wallTouches)
-        {
-            wallTouch.isWallTouchEnabled = true;
-        }
-
-
-        setWallsForClashAndInvisbleScenarios("Vision");
-        
+        PlayerModalityAndLimits(false, true, 0.25f, 0.5f, true);
+        setWalls("Vision");
         Debug.Log("Applying Full Visual Clash");
 
     }
-
-        void ApplyAudioFullClash()
+    void ApplyAudioFullClash()
     {
-        // Visual Conditions
-        visionPanel.SetActive(false);
-        OverLay.SetActive(true);
-
-        // Audio Conditions
-        audioSourcePlayer.volume = 0.25f;
-        audioSourcePlayerCollision.volume = 0.25f;
-        audioSourcePlayerLeft.volume = 0.5f;
-        audioSourcePlayerRight.volume = 0.5f;
-       
-       // Haptic Conditions
-        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
-        foreach (WallTouch wallTouch in wallTouches)
-        {
-            wallTouch.isWallTouchEnabled = true;
-        }
-        
-        setWallsForClashAndInvisbleScenarios("Audio");
+        PlayerModalityAndLimits(false, true, 0.25f, 0.5f, true);
+        setWalls("Audio");
         Debug.Log("Applying Full Visual Clash");
-
     }
     void ApplyHapticlFullClash()
     {
-        // Visual Conditions
-        visionPanel.SetActive(false);
-        OverLay.SetActive(true);
-
-        // Audio Conditions
-        audioSourcePlayer.volume = 0.25f;
-        audioSourcePlayerCollision.volume = 0.25f;
-        audioSourcePlayerLeft.volume = 0.5f;
-        audioSourcePlayerRight.volume = 0.5f;
-       
-       // Haptic Conditions
-        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
-        foreach (WallTouch wallTouch in wallTouches)
-        {
-            wallTouch.isWallTouchEnabled = true;
-        }
-        setWallsForClashAndInvisbleScenarios("Haptic");
+        PlayerModalityAndLimits(false, true, 0.25f, 0.5f, true);
+        setWalls("Haptic");
         Debug.Log("Applying Full Haptic Clash");
     }
 
     void ApplyInvisible()
     {
-        // Visual Conditions
-        visionPanel.SetActive(false);
-        OverLay.SetActive(true);
-
-        // Audio Conditions
-        audioSourcePlayer.volume = 0.25f;
-        audioSourcePlayerCollision.volume = 0.25f;
-        audioSourcePlayerLeft.volume = 0.5f;
-        audioSourcePlayerRight.volume = 0.5f;
-       
-       // Haptic Conditions
-        WallTouch[] wallTouches = FindObjectsOfType<WallTouch>(); 
-        foreach (WallTouch wallTouch in wallTouches)
-        {
-            wallTouch.isWallTouchEnabled = true;
-        }
-        setWallsForClashAndInvisbleScenarios("Invisible");
+        PlayerModalityAndLimits(false, true, 0.25f, 0.5f, true);
+        setWalls("Invisible");
         Debug.Log("Applying Full Haptic Clash");
     }
 
