@@ -20,9 +20,12 @@ public class GameManager : MonoBehaviour
     
     public static int ConditionCount = 1;
     public static int[] Paths = new int[] { 0, 1, 2, 3 };
+    public static int path;
 
     private float startTime;
+    private float finishTime;
     public float timeBetweenMazes = 120f; // 2 minutes in seconds
+
     public TextMeshProUGUI textMeshPro;
     
     // maze objects
@@ -35,8 +38,8 @@ public class GameManager : MonoBehaviour
     private AudioSource audioSourcePlayerRight;
 
 
-    public static string[] conditions = new string[] { "all", "visual_only", "audio_only", "haptic_only",
-        "visual_off", "audio_off", "haptic_off",
+    public static string[] conditions = new string[] { //"all", "visual_only", "audio_only", "haptic_only",
+        //"visual_off", "audio_off", "haptic_off",
         "visual_full_clash", "audio_full_clash", "haptic_full_clash", "Invisible"};
     List<string> visualTags = new List<string> { "Ivisible", "VisualGhost" };
     List<string> audioTags = new List<string> { "Mute", "AudioGhost" };
@@ -121,16 +124,12 @@ public class GameManager : MonoBehaviour
         }
 
         // Activate next condition
+        path = mazeManager.SetPath(Paths);
         mazeManager.ActivateCondition(conditions[ConditionCount]);
-        int activePath = mazeManager.SetPath(Paths);
-        mazeManager.SetSelectedPath(activePath);
     // Increment ConditionCount for the next maze
         ConditionCount++;
 
     }
-
-
-
 
     public void UpdateTextNextLevelScreen(string condition_name)
     {
@@ -149,7 +148,7 @@ public class GameManager : MonoBehaviour
         textMeshPro.text = "Next Maze:\nOnly Visual";
               break;
         case "haptic_only" when true:
-            textMeshPro.text = "Next Maze: Only Haptic";
+            textMeshPro.text = "Next Maze:\nOnly Haptic";
               break;
         
         // only Two sensory channels - One off

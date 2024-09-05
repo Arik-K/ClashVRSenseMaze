@@ -10,7 +10,6 @@ public class MazeManager : MonoBehaviour
 
     // The array of materials you want to use.
     //public Material[] materials; 
-    public int SelectedPath { get; private set; }
 
     //gameObjects for player
     public GameObject visionPanel;// for visual off
@@ -32,15 +31,12 @@ public class MazeManager : MonoBehaviour
     private AudioSource audioSourcePlayerRight;
     private AudioSource audioSourcePlayerCollision;
 
+     
+
     public static string[] conditions = new string[] { "all", "visual_only", "audio_only", "haptic_only",
         "visual_off", "audio_off", "haptic_off",
         "visual_full_clash", "audio_full_clash", "haptic_full_clash", "Invisible"};
-    List<string> visualTags = new List<string> { "Ivisible", "VisualGhost" };
-    List<string> audioTags = new List<string> { "Mute", "AudioGhost" };
-    List<string> hapticTags = new List<string> { "Intangable", "TangableGhost" };
-    
-  
-    
+        
     // Start is called before the first frame update
     void Start()
     {
@@ -126,7 +122,7 @@ public class MazeManager : MonoBehaviour
 
     
     // Maze Mechanism
-    // Set walls and goals accordingly
+    // Set walls and goals 
     public int SetPath(int[] paths)
     {
         // Check if paths list is not empty
@@ -140,6 +136,7 @@ public class MazeManager : MonoBehaviour
         System.Random random = new System.Random();
         int randomIndex = random.Next(paths.Length);  // Get a random index
         int path = paths[randomIndex];
+        
 
        foreach(GameObject Goal in ChangingGoals)
        {
@@ -153,14 +150,9 @@ public class MazeManager : MonoBehaviour
        }
        ChangingWalls[path].SetActive(false);
 
-        return path;
-    }
-    public void SetSelectedPath(int path)
-{
-    SelectedPath = path;
-    
-}
+       return path;
 
+    }
     public void setWalls(string wallType)
     {
         
@@ -179,34 +171,38 @@ public class MazeManager : MonoBehaviour
                 {
                     InvisibleWall(ChangingWall);     
                 }
-
-                VisualGhostWall(ChangingWalls[SelectedPath]);
+                ChangingWalls[GameManager.path].SetActive(true);
+                VisualGhostWall(ChangingWalls[GameManager.path]);
             break;
             
             case "Audio" when true:
 
+                ChangingWalls[GameManager.path].SetActive(true);
                 foreach(GameObject ChangingWall in ChangingWalls)
                 {
-                    MuteWall(ChangingWall);     
+                    MuteWall(ChangingWall);
                 }
 
-                AudioGhostWall(ChangingWalls[SelectedPath]);
+                AudioGhostWall(ChangingWalls[GameManager.path]);
             break;            
             
             case "Haptic" when true:
 
+                ChangingWalls[GameManager.path].SetActive(true);
                 foreach(GameObject ChangingWall in ChangingWalls)
                 {
                     Intangable(ChangingWall);     
                 }
 
-                HapticGhostWall(ChangingWalls[SelectedPath]);
+                HapticGhostWall(ChangingWalls[GameManager.path]);
             break;
 
-            case "Invisble" when true:
-                foreach(GameObject InsidegWall in InsideWalls)
+            case "Invisible" when true:
+                
+                ChangingWalls[GameManager.path].SetActive(true);
+                foreach(GameObject InsideWall in InsideWalls)
                 {
-                    InvisibleWall(InsidegWall);     
+                    InvisibleWall(InsideWall);     
                 }
                 foreach(GameObject ChangingWall in ChangingWalls)
                 {

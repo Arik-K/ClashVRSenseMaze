@@ -25,7 +25,7 @@ public class PlayerCollsions : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Goal"))
+        if (other.gameObject.CompareTag("Goal") || other.gameObject.CompareTag("FalseGoal"))
         {
             onFinish?.Invoke();
         }
