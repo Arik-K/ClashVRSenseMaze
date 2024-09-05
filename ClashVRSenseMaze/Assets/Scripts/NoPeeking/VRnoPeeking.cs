@@ -9,6 +9,7 @@ using UnityEngine;
 public class VRnoPeeking : MonoBehaviour
 {
     [SerializeField] LayerMask CollisionLayer;
+    List<string> collisionTags = new List<string> {"Wall", "Mute", "Intangable"}; // List of tags to check
     [SerializeField] float fadeSpeed;
     [SerializeField] float sphereCheckSize = .15f;
 
@@ -20,18 +21,36 @@ public class VRnoPeeking : MonoBehaviour
         cameraFadeMat = GetComponent<Renderer>().material;
     }
     // Update is called once per frame
+    // Update is called once per frame
     void Update()
     {
-        if(Physics.CheckSphere(transform.position, sphereCheckSize, CollisionLayer, QueryTriggerInteraction.Ignore)){
-            CameraFade(1f);
-            isCameraFade=true;
-        }
-        else{
-            if(!isCameraFade)
-                return;
-            
-            CameraFade(0f);
+        bool shouldFade = false;
 
+        // Check if there's a collision with the specific layer
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, sphereCheckSize, CollisionLayer, QueryTriggerInteraction.Ignore);
+
+        foreach (var hitCollider in hitColliders)
+        {
+            // Check if the collided object has any of the required tags
+            if (collisionTags.Contains(hitCollider.tag))
+            {
+                shouldFade = true;
+                break;
+            }
+        }
+
+        // Apply fade if we should fade based on the collision check
+        if (shouldFade)
+        {
+            CameraFade(1f);
+            isCameraFade = true;
+        }
+        else
+        {
+            if (!isCameraFade)
+                return;
+
+            CameraFade(0f);
         }
     }
 

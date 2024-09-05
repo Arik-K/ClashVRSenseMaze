@@ -1,0 +1,17 @@
+Time, Collision Type, Object Tag
+0, Trigger, StartPoint
+5.42, Trigger, AudioGhost
+8.26, Trigger, Mute
+10.4, Trigger, AudioGhost
+11.74, Trigger, Goal
+18.14, Trigger, StartPoint
+18.16, Trigger, Wall
+22.68, Trigger, Wall
+27.44, Trigger, Mute
+30.32, Trigger, Mute
+33.12, Trigger, Mute
+38.38, Trigger, Wall
+38.42, Trigger, Mute
+45.6, Trigger, AudioGhost
+48.16, Trigger, AudioGhost
+53.34, Trigger, Goal

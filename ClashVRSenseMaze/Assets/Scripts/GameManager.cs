@@ -38,9 +38,13 @@ public class GameManager : MonoBehaviour
     private AudioSource audioSourcePlayerRight;
 
 
-    public static string[] conditions = new string[] { //"all", "visual_only", "audio_only", "haptic_only",
+    public static string[] conditions = new string[] { "all", "visual_only", "audio_only", "haptic_only",
         //"visual_off", "audio_off", "haptic_off",
-        "visual_full_clash", "audio_full_clash", "haptic_full_clash", "Invisible"};
+        //"visual_full_clash", 
+        //"audio_full_clash", 
+        //"haptic_full_clash", 
+        //"invisible"
+        };
     List<string> visualTags = new List<string> { "Ivisible", "VisualGhost" };
     List<string> audioTags = new List<string> { "Mute", "AudioGhost" };
     List<string> hapticTags = new List<string> { "Intangable", "TangableGhost" };

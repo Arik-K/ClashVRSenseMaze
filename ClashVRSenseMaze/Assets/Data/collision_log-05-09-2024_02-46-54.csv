@@ -1,0 +1,17 @@
+Time, Collision Type, Object Tag
+0, Trigger, StartPoint
+8.82, Trigger, Invisible
+11, Trigger, VisualGhost
+11.18, Trigger, Wall
+13.18, Trigger, Invisible
+19.84, Trigger, Invisible
+22.22, Trigger, VisualGhost
+23.7, Trigger, Wall
+26.88, Trigger, Invisible
+29.18, Trigger, Invisible
+32.08, Trigger, Invisible
+36.7, Trigger, Invisible
+39.04, Trigger, Invisible
+39.06, Trigger, Wall
+42.22, Trigger, VisualGhost
+43.62, Trigger, Goal

@@ -25,7 +25,7 @@ public class MazeManager : MonoBehaviour
     public List<GameObject> ChangingGoals = new List<GameObject>();
     public List<GameObject> InsideWalls = new List<GameObject>();
     
-    // audio sources
+    // Audio Sources
     private AudioSource audioSourcePlayer;
     private AudioSource audioSourcePlayerLeft;
     private AudioSource audioSourcePlayerRight;
@@ -87,7 +87,7 @@ public class MazeManager : MonoBehaviour
     {
         wall.tag = "AudioGhost";
         wall.layer = LayerMask.NameToLayer("Default");
-        wall.GetComponent<MeshRenderer>().enabled = false;
+        wall.GetComponent<MeshRenderer>().enabled = true;
     }
 
     void HapticGhostWall(GameObject wall)
@@ -199,7 +199,6 @@ public class MazeManager : MonoBehaviour
 
             case "Invisible" when true:
                 
-                ChangingWalls[GameManager.path].SetActive(true);
                 foreach(GameObject InsideWall in InsideWalls)
                 {
                     InvisibleWall(InsideWall);     
@@ -268,7 +267,7 @@ public class MazeManager : MonoBehaviour
             case "visual_full_clash" when true:
                 ApplyVisualFullClash();
                 break;
-            case "Haptic_full_clash" when true:
+            case "haptic_full_clash" when true:
                 ApplyHapticlFullClash();
                 break;
 
