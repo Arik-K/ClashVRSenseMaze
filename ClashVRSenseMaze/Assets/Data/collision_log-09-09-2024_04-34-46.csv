@@ -1,0 +1,7 @@
+Time, Collision Type, Object Tag
+0, Trigger, StartPoint
+6.46, Trigger, Wall
+7.16, Trigger, Wall
+7.82, Trigger, Wall
+7.94, Trigger, Wall
+10.96, Trigger, Goal
