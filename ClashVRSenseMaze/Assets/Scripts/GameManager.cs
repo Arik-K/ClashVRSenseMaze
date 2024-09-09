@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     public GameObject Right;
 
     
-    public static int ConditionCount = 1;
+    public static int ConditionCount = 0;
     public static int[] Paths = new int[] { 0, 1, 2, 3 };
     public static int path;
 
@@ -38,20 +38,22 @@ public class GameManager : MonoBehaviour
     private AudioSource audioSourcePlayerRight;
 
 
-    public static string[] conditions = new string[] { "all", "visual_only", "audio_only", "haptic_only",
-        //"visual_off", "audio_off", "haptic_off",
+    public static string[] conditions = new string[] { "all", //"visual_only", "audio_only", "haptic_only",
+       // "visual_off", "audio_off", "haptic_off",
         //"visual_full_clash", 
-        //"audio_full_clash", 
+       // "audio_full_clash", 
         //"haptic_full_clash", 
         //"invisible"
         };
-    List<string> visualTags = new List<string> { "Ivisible", "VisualGhost" };
+
+    List<string> conditionList;
+    List<string> visualTags = new List<string> {"Ivisible", "VisualGhost"};
     List<string> audioTags = new List<string> { "Mute", "AudioGhost" };
     List<string> hapticTags = new List<string> { "Intangable", "TangableGhost" };
     
     void Start()
     {
-        ConditionCount = 0;
+        conditionList = new List<string>(conditions); 
         mazeManager = maze.GetComponent<MazeManager>();
         int LayerIgnoreRaycast = LayerMask.NameToLayer("Ignore Raycast");
         Debug.Log("Current layer: " + gameObject.layer);
@@ -67,8 +69,15 @@ public class GameManager : MonoBehaviour
         audioSourcePlayerRight = Right.GetComponent<AudioSource>();
         startTime = Time.time;
 
-        // Disable instruction panel at start
-        instructionPanel.SetActive(false);
+        // Disable all
+        //instructionPanel.SetActive(false);
+        maze.SetActive(false);
+        startPoint.SetActive(true);
+        foreach( GameObject goal in ChangingGoals)
+        {
+           goal.SetActive(false); 
+        }
+        
 
         // Find the PlayerCollisions script and subscribe to the onFinish event.
         PlayerCollsions playerCollisions = FindObjectOfType<PlayerCollsions>();
@@ -81,10 +90,40 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("PlayerCollisions script not found!");
         }
+
+        UpdateTextNextLevelScreen(conditions[ConditionCount]);
+
     }
+
+        // Method to get a random condition from the list and remove it
+    string GetRandomCondition()
+    {
+        if (conditionList.Count == 0)
+        {
+            Debug.LogWarning("No more conditions to choose from.");
+            return null; // Handle this case as needed
+        }
+
+        // Get a random index
+        int randomIndex = Random.Range(0, conditionList.Count);
+
+        // Get the condition at the random index
+        string chosenCondition = conditionList[randomIndex];
+
+        // Remove the chosen condition from the list
+        conditionList.RemoveAt(randomIndex);
+
+        return chosenCondition;
+    }
+
 
     private void OnFinish()
     {
+        if(ConditionCount >= conditions.Length)
+        {
+             textMeshPro.text = "Thank you for Participating :)";
+        }
+        
         // Handle the finish event (e.g., start the next maze).
         foreach( GameObject goal in ChangingGoals)
         {
@@ -93,7 +132,7 @@ public class GameManager : MonoBehaviour
         maze.SetActive(false);
         visionPanel.SetActive(false);
         startPoint.SetActive(true);
-        instructionPanel.SetActive(true);
+       //instructionPanel.SetActive(true);
         UpdateTextNextLevelScreen(conditions[ConditionCount]);
         
     }
@@ -101,6 +140,16 @@ public class GameManager : MonoBehaviour
     private void OnStartingPointCollision()
     {
         startPoint.SetActive(false);
+        instructionPanel.SetActive(true);
+        StartCoroutine(SetNextMaze());
+
+        //ActivateCondition(conditions[ConditionCount]);
+    }
+
+    IEnumerator SetNextMaze()
+    {
+        yield return new WaitForSeconds(4f);
+        
         instructionPanel.SetActive(false);
         foreach( GameObject goal in ChangingGoals)
         {
@@ -109,8 +158,8 @@ public class GameManager : MonoBehaviour
         maze.SetActive(true);
 
         NextMaze();
-        //ActivateCondition(conditions[ConditionCount]);
     }
+    
 
 
     void NextMaze()
@@ -130,7 +179,7 @@ public class GameManager : MonoBehaviour
         // Activate next condition
         path = mazeManager.SetPath(Paths);
         mazeManager.ActivateCondition(conditions[ConditionCount]);
-    // Increment ConditionCount for the next maze
+        // Increment ConditionCount for the next maze
         ConditionCount++;
 
     }

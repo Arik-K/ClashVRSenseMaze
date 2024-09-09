@@ -38,7 +38,7 @@ public class MazeManager : MonoBehaviour
         "visual_full_clash", "audio_full_clash", "haptic_full_clash", "Invisible"};
         
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         int[] Paths = new int[] { 0, 1, 2, 3 };
         if (ChangingWalls == null)
