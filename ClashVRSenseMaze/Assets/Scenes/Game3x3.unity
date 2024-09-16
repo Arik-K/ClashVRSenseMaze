@@ -2035,7 +2035,7 @@ GameObject:
   - component: {fileID: 213757886}
   m_Layer: 2
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2057,7 +2057,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -4035,7 +4035,7 @@ Transform:
   m_GameObject: {fileID: 575591859}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: -3.3200002, y: 0, z: 3.94}
+  m_LocalPosition: {x: -3.42, y: 0, z: 3.94}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4703,7 +4703,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 1.0136557
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -4859,7 +4859,7 @@ Transform:
   m_GameObject: {fileID: 723730041}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: -0.25, y: 0, z: 3.94}
+  m_LocalPosition: {x: -0.21, y: 0, z: 3.94}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5730,6 +5730,7 @@ MonoBehaviour:
   maze: {fileID: 1696572924}
   Left: {fileID: 1110403744}
   Right: {fileID: 1110403744}
+  ConditionCount: 0
   timeBetweenMazes: 120
   textMeshPro: {fileID: 1713988366}
   ChangingGoals:
@@ -5737,6 +5738,18 @@ MonoBehaviour:
   - {fileID: 2056764191}
   - {fileID: 724445236}
   - {fileID: 723730041}
+  conditions:
+  - all
+  - visual_only
+  - audio_only
+  - haptic_only
+  - visual_off
+  - audio_off
+  - haptic_off
+  - visual_full_clash
+  - audio_full_clash
+  - haptic_full_clash
+  - invisible
 --- !u!1 &915089723
 GameObject:
   m_ObjectHideFlags: 0
@@ -11145,7 +11158,7 @@ Transform:
   m_GameObject: {fileID: 1347647253}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.02, y: 0, z: -2.32}
+  m_LocalPosition: {x: 0.02, y: 0, z: -2.35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11577,6 +11590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a00312d498c55445a184f34060539db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameManager: {fileID: 911231543}
   player: {fileID: 1347647253}
 --- !u!136 &1347647269
 CapsuleCollider:

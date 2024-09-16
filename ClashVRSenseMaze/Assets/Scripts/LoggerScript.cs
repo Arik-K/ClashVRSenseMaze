@@ -7,68 +7,100 @@ using UnityEngine.SceneManagement;
 
 public class LoggerScript : MonoBehaviour
 {
-   
-   GameManager gm;
-    //private Vector3[] initial_positions = GameManagerScript.initial_position;
-    private string[] MazeType;
-    private string[] ConditionType;
+    GameManager gm;
+    public GameObject GameManager;
+
     private float samplingTime = 0.02f; // sample time in sec
-    private string date_string = DateTime.Now.ToString("-dd-MM-yyyy_hh-mm-ss");
-    private RaycastHit hit_info;
-    public GameObject player; // the player game object
-    System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);    
-      // Path to the CSV file
+   // private string date_string = DateTime.Now.ToString("-dd-MM-yyyy_hh-mm-ss");
+    public GameObject player;
+    
     private string filePath;
+    private List<string> logBuffer = new List<string>();
+    private float writeInterval = 5.0f; // Write every 5 seconds
+    private float timeSinceLastWrite = 0f;
+    private float lastCollisionTime = -1f;
+    private float collisionCooldown = 0.5f; // 0.5 seconds cooldown between collisions
 
     void Start()
     {
-        // Define the file path for the CSV file
-        filePath = Application.dataPath + "/Data/collision_log" + date_string +".csv";
+        string date_string = DateTime.Now.ToString("-dd-MM-yyyy_hh-mm-ss");
+        filePath = Path.Combine(Application.persistentDataPath, "collision_log" + date_string + ".csv");
+        Debug.Log("File path: " + filePath);
 
-        // Check if the file already exists, if not, create it and add headers
         if (!File.Exists(filePath))
         {
-            // Add a header to the CSV file
             File.WriteAllText(filePath, "Time, Collision Type, Object Tag\n");
+        }
+
+        if (GameManager != null)
+        {
+            gm = GameManager.GetComponent<GameManager>();
+            if (gm == null)
+            {
+                Debug.LogError("GameManager component not found on GameManager GameObject!");
+            }
+        }
+        else
+        {
+            Debug.LogError("GameManager GameObject is not set in the LoggerScript inspector!");
+        }
+
+    }
+
+    void Update()
+    {
+        timeSinceLastWrite += Time.deltaTime;
+        if (timeSinceLastWrite >= writeInterval)
+        {
+            WriteLogBufferToFile();
+            timeSinceLastWrite = 0f;
         }
     }
 
-    // Called when this collider/rigidbody has begun touching another rigidbody/collider
+    void OnApplicationQuit()
+    {
+        WriteLogBufferToFile(); // Ensure all logs are written on exit
+    }
+
+    private void WriteLogBufferToFile()
+    {
+        if (logBuffer.Count > 0)
+        {
+            File.AppendAllLines(filePath, logBuffer);
+            logBuffer.Clear();
+        }
+    }
+
     void OnCollisionEnter(Collision collision)
     {
-        // Log the collision time, type, and object tag to the CSV
-        string time = Time.time.ToString(); // Get the time since the start of the game
-        string collisionType = "Collision";
-        string objectTag = collision.gameObject.tag; // Get the tag of the colliding object
+        if (Time.time - lastCollisionTime < collisionCooldown)
+            return;
 
-        // Format the data as a CSV line
-        string logEntry = time + ", " + collisionType + ", " + objectTag + "\n";
+        lastCollisionTime = Time.time;
 
-        // Append the log entry to the CSV file
-        File.AppendAllText(filePath, logEntry);
+        string time = DateTime.Now.ToString("hh:mm:ss.fff");
+        string Condition = gm.conditions[gm.ConditionCount];
+        string objectTag = collision.gameObject.tag;
 
-        // Optionally log to console as well for debugging
-        Debug.Log("Logged: " + logEntry);
+        string logEntry = time + ", " + Condition + ", " + objectTag;
+        logBuffer.Add(logEntry);
+
+        Debug.Log("Buffered Log: " + logEntry);
     }
 
-    // Called when the collider other enters the trigger
     void OnTriggerEnter(Collider other)
     {
-        // Log the trigger time, type, and object tag to the CSV
-        string time = Time.time.ToString(); // Get the time since the start of the game
-        string collisionType = "Trigger";
-        string objectTag = other.gameObject.tag; // Get the tag of the triggering object
+        string time = DateTime.Now.ToString("hh:mm:ss.fff");
+        string Condition = gm.conditions[gm.ConditionCount];
+        string objectTag = other.gameObject.tag;
 
-        // Format the data as a CSV line
-        string logEntry = time + ", " + collisionType + ", " + objectTag + "\n";
+        string logEntry = time + ", " + Condition + ", " + objectTag;
+        logBuffer.Add(logEntry);
 
-        // Append the log entry to the CSV file
-        File.AppendAllText(filePath, logEntry);
-
-        // Optionally log to console as well for debugging
-        Debug.Log("Logged: " + logEntry);
+        Debug.Log("Buffered Log: " + logEntry);
     }
 }
+
 
 
 

@@ -18,13 +18,13 @@ public class GameManager : MonoBehaviour
     public GameObject Right;
 
     
-    public static int ConditionCount = 0;
+    public  int ConditionCount = 0;
     public static int[] Paths = new int[] { 0, 1, 2, 3 };
     public static int path;
 
     private float startTime;
     private float finishTime;
-    public float timeBetweenMazes = 120f; // 2 minutes in seconds
+    public float timeBetweenMazes = 180f; // 3 minutes in seconds
 
     public TextMeshProUGUI textMeshPro;
     
@@ -38,12 +38,12 @@ public class GameManager : MonoBehaviour
     private AudioSource audioSourcePlayerRight;
 
 
-    public static string[] conditions = new string[] { "all", //"visual_only", "audio_only", "haptic_only",
-       // "visual_off", "audio_off", "haptic_off",
-        //"visual_full_clash", 
-       // "audio_full_clash", 
-        //"haptic_full_clash", 
-        //"invisible"
+    public string[] conditions = new string[] { "all", "visual_only", "audio_only", "haptic_only",
+        "visual_off", "audio_off", "haptic_off",
+        "visual_full_clash", 
+       "audio_full_clash", 
+        "haptic_full_clash", 
+        "invisible"
         };
 
     List<string> conditionList;

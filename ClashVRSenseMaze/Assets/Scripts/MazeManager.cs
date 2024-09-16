@@ -87,7 +87,7 @@ public class MazeManager : MonoBehaviour
     {
         wall.tag = "AudioGhost";
         wall.layer = LayerMask.NameToLayer("Default");
-        wall.GetComponent<MeshRenderer>().enabled = true;
+        wall.GetComponent<MeshRenderer>().enabled = false;
     }
 
     void HapticGhostWall(GameObject wall)
