@@ -36,6 +36,10 @@ public class LoggerScript : MonoBehaviour
 
     public void LogCollision(GameObject collidedObject, string collisionSource)
     {
+        // Ignore collisions with objects tagged as "Hand" or "Untagged"
+        if (collidedObject.CompareTag("Hand") || collidedObject.CompareTag("Untagged") || collidedObject.CompareTag("Player"))
+            return;
+            
         if (Time.time - lastCollisionTime < collisionCooldown)
             return;
 
