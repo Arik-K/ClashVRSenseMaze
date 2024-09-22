@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
         "visual_off", "audio_off", "haptic_off",
         "visual_full_clash", 
        "audio_full_clash", 
-        "haptic_full_clash", 
+        "haptic_full_clash",
         "invisible"
         };
 
@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
     
     void Start()
     {
-        conditionList = new List<string>(conditions); 
+        //conditionList = new List<string>(conditions); 
         mazeManager = maze.GetComponent<MazeManager>();
         int LayerIgnoreRaycast = LayerMask.NameToLayer("Ignore Raycast");
         Debug.Log("Current layer: " + gameObject.layer);

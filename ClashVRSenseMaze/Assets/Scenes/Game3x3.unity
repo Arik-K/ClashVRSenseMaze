@@ -3867,6 +3867,7 @@ GameObject:
   - component: {fileID: 575591864}
   - component: {fileID: 575591863}
   - component: {fileID: 575591860}
+  - component: {fileID: 575591867}
   m_Layer: 0
   m_Name: Goal5_1
   m_TagString: Goal
@@ -3884,7 +3885,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: cb48de2fa22be4f48958709ae6368a55, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 6325ea15b05955f4e8d6fc3daf09acf4, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -4050,12 +4051,29 @@ Transform:
   m_GameObject: {fileID: 575591859}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: -3.42, y: 0, z: 3.94}
+  m_LocalPosition: {x: -3.42, y: 0, z: 4.04}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 611016763}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &575591867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 575591859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc41cfb8af120b349bb44ed16e0c0960, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gm: {fileID: 911231549}
+  audioSource: {fileID: 575591860}
+  maxDistance: 1.01
+  minDistance: 0.2
+  listenerTag: MainCamera
 --- !u!1 &593347060
 GameObject:
   m_ObjectHideFlags: 0
@@ -4691,6 +4709,7 @@ GameObject:
   - component: {fileID: 723730046}
   - component: {fileID: 723730045}
   - component: {fileID: 723730042}
+  - component: {fileID: 723730049}
   m_Layer: 0
   m_Name: Goal5_4
   m_TagString: Goal
@@ -4708,7 +4727,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: cb48de2fa22be4f48958709ae6368a55, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 6325ea15b05955f4e8d6fc3daf09acf4, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -4874,12 +4893,29 @@ Transform:
   m_GameObject: {fileID: 723730041}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: -0.21, y: 0, z: 3.92}
+  m_LocalPosition: {x: -0.21, y: 0, z: 4.02}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 611016763}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &723730049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 723730041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc41cfb8af120b349bb44ed16e0c0960, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gm: {fileID: 911231549}
+  audioSource: {fileID: 723730042}
+  maxDistance: 1.01
+  minDistance: 0.2
+  listenerTag: MainCamera
 --- !u!1 &724445236
 GameObject:
   m_ObjectHideFlags: 0
@@ -4893,6 +4929,7 @@ GameObject:
   - component: {fileID: 724445241}
   - component: {fileID: 724445240}
   - component: {fileID: 724445237}
+  - component: {fileID: 724445244}
   m_Layer: 0
   m_Name: Goal5_3
   m_TagString: Untagged
@@ -4910,7 +4947,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: cb48de2fa22be4f48958709ae6368a55, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 6325ea15b05955f4e8d6fc3daf09acf4, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -5082,6 +5119,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 611016763}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &724445244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 724445236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc41cfb8af120b349bb44ed16e0c0960, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gm: {fileID: 911231549}
+  audioSource: {fileID: 724445237}
+  maxDistance: 1.01
+  minDistance: 0.2
+  listenerTag: MainCamera
 --- !u!1 &783571656
 GameObject:
   m_ObjectHideFlags: 0
@@ -5963,7 +6017,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.08
+  m_Radius: 0.07
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &915089729
 Rigidbody:
@@ -8465,6 +8519,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc41cfb8af120b349bb44ed16e0c0960, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gm: {fileID: 0}
+  audioSource: {fileID: 0}
+  maxDistance: 0.25
+  minDistance: 0.01
+  listenerTag: MainCamera
 --- !u!82 &1133012908
 AudioSource:
   m_ObjectHideFlags: 0
@@ -11626,6 +11685,7 @@ MonoBehaviour:
   player: {fileID: 1347647253}
   leftHand: {fileID: 915089723}
   rightHand: {fileID: 1610382350}
+  condition: 
 --- !u!1 &1368080315
 GameObject:
   m_ObjectHideFlags: 0
@@ -13608,7 +13668,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.08
+  m_Radius: 0.07
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1610382357
 MonoBehaviour:
@@ -15848,7 +15908,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5, y: 0.5, z: 0.5}
+  m_Size: {x: 0.25, y: 0.5, z: 0.25}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1905712291
 MeshRenderer:
@@ -16693,6 +16753,7 @@ GameObject:
   - component: {fileID: 2056764196}
   - component: {fileID: 2056764195}
   - component: {fileID: 2056764192}
+  - component: {fileID: 2056764199}
   m_Layer: 0
   m_Name: Goal5_2
   m_TagString: Goal
@@ -16714,7 +16775,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 0.3
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -16882,6 +16943,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 611016763}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2056764199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2056764191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc41cfb8af120b349bb44ed16e0c0960, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gm: {fileID: 911231549}
+  audioSource: {fileID: 2056764192}
+  maxDistance: 1.01
+  minDistance: 0.2
+  listenerTag: MainCamera
 --- !u!1 &2069727403
 GameObject:
   m_ObjectHideFlags: 0
