@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 
 public class GameManager : MonoBehaviour
@@ -131,7 +132,9 @@ public class GameManager : MonoBehaviour
         
         if(ConditionCount >= conditions.Length)
         {
-             textMeshPro.text = "Thank you for Participating :)";
+            textMeshPro.text = "Thank you for Participating :)";
+            SceneManager.LoadScene("MainMenuScene");
+            return;
         }
         
         // Handle the finish event (e.g., start the next maze).
