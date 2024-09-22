@@ -2901,7 +2901,7 @@ GameObject:
   - component: {fileID: 432245958}
   m_Layer: 0
   m_Name: StartSound
-  m_TagString: Untagged
+  m_TagString: Finish
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3152,10 +3152,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1905712293}
     m_Modifications:
+    - target: {fileID: 3220440682565326710, guid: 48c5715f9603c3842a353516a8baefbb,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.w
+      value: -3.0895889e+31
+      objectReference: {fileID: 0}
+    - target: {fileID: 3220440682565326710, guid: 48c5715f9603c3842a353516a8baefbb,
+        type: 3}
+      propertyPath: m_BoundingSphereOverride.y
+      value: NaN
+      objectReference: {fileID: 0}
     - target: {fileID: 3377181292992421420, guid: 48c5715f9603c3842a353516a8baefbb,
         type: 3}
       propertyPath: m_Name
       value: Magic circle 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3377181292992421420, guid: 48c5715f9603c3842a353516a8baefbb,
+        type: 3}
+      propertyPath: m_TagString
+      value: Finish
       objectReference: {fileID: 0}
     - target: {fileID: 3423388300971593625, guid: 48c5715f9603c3842a353516a8baefbb,
         type: 3}
@@ -5768,6 +5783,7 @@ GameObject:
   - component: {fileID: 915089727}
   - component: {fileID: 915089726}
   - component: {fileID: 915089725}
+  - component: {fileID: 915089733}
   m_Layer: 2
   m_Name: LeftHand (Smooth locomotion)
   m_TagString: Hand
@@ -5924,7 +5940,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ba84fed2d1fce4479781dba7d4f6903, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 915089731}
+  controller: {fileID: 0}
   vibrationIntensity: 0.3
   vibrationDuration: 0.1
   isWallTouchEnabled: 1
@@ -6265,6 +6281,20 @@ MonoBehaviour:
   m_RayInteractorChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &915089733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 915089723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d2e2bec47e460d438d67e4248c4d0a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  logger: {fileID: 1347647268}
+  handName: LeftHand
 --- !u!1 &918442999
 GameObject:
   m_ObjectHideFlags: 0
@@ -7410,7 +7440,7 @@ GameObject:
   - component: {fileID: 1058379854}
   m_Layer: 2
   m_Name: OverLay
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11143,7 +11173,6 @@ GameObject:
   - component: {fileID: 1347647256}
   - component: {fileID: 1347647255}
   - component: {fileID: 1347647268}
-  - component: {fileID: 1347647269}
   m_Layer: 2
   m_Name: XR Origin
   m_TagString: Player
@@ -11593,31 +11622,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a00312d498c55445a184f34060539db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameManager: {fileID: 911231543}
+  gm: {fileID: 911231549}
   player: {fileID: 1347647253}
---- !u!136 &1347647269
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1347647253}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.25
-  m_Height: 1.8
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  leftHand: {fileID: 915089723}
+  rightHand: {fileID: 1610382350}
 --- !u!1 &1368080315
 GameObject:
   m_ObjectHideFlags: 0
@@ -13393,6 +13401,7 @@ GameObject:
   - component: {fileID: 1610382354}
   - component: {fileID: 1610382353}
   - component: {fileID: 1610382352}
+  - component: {fileID: 1610382360}
   m_Layer: 2
   m_Name: RightHand (Teleport Locomotion)
   m_TagString: Hand
@@ -13549,7 +13558,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ba84fed2d1fce4479781dba7d4f6903, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 1610382358}
+  controller: {fileID: 0}
   vibrationIntensity: 0.3
   vibrationDuration: 0.1
   isWallTouchEnabled: 1
@@ -13890,6 +13899,20 @@ MonoBehaviour:
   m_RayInteractorChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1610382360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1610382350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d2e2bec47e460d438d67e4248c4d0a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  logger: {fileID: 1347647268}
+  handName: RightHand
 --- !u!1 &1626435478
 GameObject:
   m_ObjectHideFlags: 0
@@ -15352,7 +15375,6 @@ GameObject:
   - component: {fileID: 1853996227}
   - component: {fileID: 1853996226}
   - component: {fileID: 1853996225}
-  - component: {fileID: 1853996224}
   m_Layer: 2
   m_Name: NoVision
   m_TagString: Untagged
@@ -15360,28 +15382,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!64 &1853996224
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1853996223}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &1853996225
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -15848,7 +15848,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5, y: 1, z: 0.5}
+  m_Size: {x: 0.5, y: 0.5, z: 0.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1905712291
 MeshRenderer:
@@ -17335,9 +17335,9 @@ SceneRoots:
   - {fileID: 1008085459}
   - {fileID: 611016763}
   - {fileID: 1696572925}
-  - {fileID: 1905712293}
   - {fileID: 1110403747}
   - {fileID: 911231545}
   - {fileID: 1189703274}
   - {fileID: 1165329239}
   - {fileID: 1796687971}
+  - {fileID: 1905712293}

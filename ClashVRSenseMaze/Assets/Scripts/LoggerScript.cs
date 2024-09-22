@@ -1,92 +1,87 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
 using System.IO;
-using UnityEngine.SceneManagement;
+using UnityEngine;
 
 public class LoggerScript : MonoBehaviour
 {
-    GameManager gm;
-    public GameObject GameManager;
-
-    private float samplingTime = 0.02f; // sample time in sec
+    public GameManager gm;
     public GameObject player;
-    
+    public GameObject leftHand;
+    public GameObject rightHand;
+
     private string filePath;
     private float lastCollisionTime = -1f;
     private float collisionCooldown = 0.5f; // 0.5 seconds cooldown between collisions
+    private float startTime; // To track when the game started
 
     void Start()
     {
-        string date_string = DateTime.Now.ToString("-dd-MM-yyyy_hh-mm-ss");
+        startTime = Time.time; // Record the start time of the game
+        string date_string = DateTime.Now.ToString("-dd-MM-yyyy_HH-mm-ss");
         filePath = Path.Combine(Application.persistentDataPath, "collision_log" + date_string + ".csv");
         Debug.Log("File path: " + filePath);
 
         if (!File.Exists(filePath))
         {
-            File.WriteAllText(filePath, "Time, Collision Type, Object Tag\n");
+            File.WriteAllText(filePath, "Timeframe,Path,Condition,CollisionSource,ObjectTag,PosX,PosY,PosZ,RotX,RotY,RotZ\n");
         }
 
-        if (GameManager != null)
+        if (gm == null)
         {
-            gm = GameManager.GetComponent<GameManager>();
-            if (gm == null)
-            {
-                Debug.LogError("GameManager component not found on GameManager GameObject!");
-            }
+            Debug.LogError("GameManager is not set in the LoggerScript inspector!");
         }
-        else
-        {
-            Debug.LogError("GameManager GameObject is not set in the LoggerScript inspector!");
-        }
-
     }
 
-    void Update()
-    {
-        // Removed the buffer-related logic and timed writes
-    }
-
-    void OnApplicationQuit()
-    {
-        // No need to write the buffer anymore
-    }
-
-    void OnCollisionEnter(Collision collision)
+    public void LogCollision(GameObject collidedObject, string collisionSource)
     {
         if (Time.time - lastCollisionTime < collisionCooldown)
             return;
 
         lastCollisionTime = Time.time;
 
-        string time = DateTime.Now.ToString("hh:mm:ss.fff");
-        string Condition = gm.conditions[gm.ConditionCount];
-        string objectTag = collision.gameObject.tag;
+        float elapsedTime = Time.time - startTime; // Calculate elapsed time since game started
+        int CurrPath = GameManager.path; // Assuming gm.currentPath is an int
+        string condition = gm.conditions[gm.ConditionCount - 1];
+        string objectTag = collidedObject.tag;
 
-        string logEntry = time + ", " + Condition + ", " + objectTag;
+        Vector3 position;
+        Vector3 rotation;
 
-        // Write the log entry directly to the file
+        switch (collisionSource)
+        {
+            case "LeftHand":
+                position = leftHand.transform.position;
+                rotation = leftHand.transform.eulerAngles;
+                break;
+            case "RightHand":
+                position = rightHand.transform.position;
+                rotation = rightHand.transform.eulerAngles;
+                break;
+            default: // Player body
+                position = player.transform.position;
+                rotation = player.transform.eulerAngles;
+                break;
+        }
+
+        string logEntry = string.Format("{0:F3},{1},{2},{3},{4},{5:F2},{6:F2},{7:F2},{8:F2},{9:F2},{10:F2}",
+            elapsedTime, CurrPath, condition, collisionSource, objectTag,
+            position.x, position.y, position.z,
+            rotation.x, rotation.y, rotation.z);
+
         File.AppendAllText(filePath, logEntry + Environment.NewLine);
-
         Debug.Log("Log written: " + logEntry);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        LogCollision(collision.gameObject, "Body");
     }
 
     void OnTriggerEnter(Collider other)
     {
-        string time = DateTime.Now.ToString("hh:mm:ss.fff");
-        string Condition = gm.conditions[gm.ConditionCount];
-        string objectTag = other.gameObject.tag;
-
-        string logEntry = time + ", " + Condition + ", " + objectTag;
-
-        // Write the log entry directly to the file
-        File.AppendAllText(filePath, logEntry + Environment.NewLine);
-
-        Debug.Log("Log written: " + logEntry);
+        LogCollision(other.gameObject, "Body");
     }
 }
-
 
 
 

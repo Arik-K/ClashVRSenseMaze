@@ -13,6 +13,11 @@ public class WallTouch : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!isWallTouchEnabled) return;
+
+        if(other.gameObject.CompareTag("Goal")|| other.gameObject.CompareTag("FalseGoal"))
+        {
+           StopHapticFeedback(controller); 
+        }
         
         if (other.gameObject.CompareTag("Wall") ||other.gameObject.CompareTag("Mute") || other.gameObject.CompareTag("HapticGhost")|| other.gameObject.CompareTag("Invisible"))
         {
@@ -21,11 +26,14 @@ public class WallTouch : MonoBehaviour
                 hapticCoroutine = StartCoroutine(ContinuousHapticFeedback());
             }
         }
+
+
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Wall") ||other.gameObject.CompareTag("Mute"))
+        if (other.gameObject.CompareTag("Wall") ||other.gameObject.CompareTag("Mute") || other.gameObject.CompareTag("HapticGhost")|| other.gameObject.CompareTag("Invisible"))
+         
         {
             if (hapticCoroutine != null)
             {

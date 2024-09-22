@@ -45,6 +45,11 @@ public class PitchDistanceRaycast : MonoBehaviour
                 audioCoroutine = StartCoroutine(ContinuousAudioFeedback());
             }
         }
+
+        if(other.gameObject.CompareTag("Goal")|| other.gameObject.CompareTag("FalseGoal"))
+        {
+           StopAudioFeedback(); 
+        }
     }
 
     private void OnTriggerExit(Collider other)

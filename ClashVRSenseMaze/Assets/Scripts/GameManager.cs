@@ -96,6 +96,7 @@ public class GameManager : MonoBehaviour
         }
 
         UpdateTextNextLevelScreen(conditions[ConditionCount]);
+        //NextMaze();
 
     }
 
@@ -123,6 +124,7 @@ public class GameManager : MonoBehaviour
 
     private void OnFinish()
     {
+        
         if(ConditionCount >= conditions.Length)
         {
              textMeshPro.text = "Thank you for Participating :)";
@@ -182,12 +184,12 @@ public class GameManager : MonoBehaviour
 
         NextLevelCall.Play();
 
+        
         // Activate next condition
         path = mazeManager.SetPath(Paths);
         mazeManager.ActivateCondition(conditions[ConditionCount]);
         // Increment ConditionCount for the next maze
         ConditionCount++;
-
     }
 
     public void UpdateTextNextLevelScreen(string condition_name)
