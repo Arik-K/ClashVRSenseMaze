@@ -2138,7 +2138,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: e4fc86f99464cac46a0158d928a59060, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -4703,7 +4703,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1.0136557
+  MinDistance: 1.0274593
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -4859,7 +4859,7 @@ Transform:
   m_GameObject: {fileID: 723730041}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: -0.21, y: 0, z: 3.94}
+  m_LocalPosition: {x: -0.21, y: 0, z: 3.92}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5728,6 +5728,7 @@ MonoBehaviour:
   instructionPanel: {fileID: 1165329234}
   startPoint: {fileID: 1905712289}
   maze: {fileID: 1696572924}
+  Ground: {fileID: 213757881}
   Left: {fileID: 1110403744}
   Right: {fileID: 1110403744}
   ConditionCount: 0
@@ -5805,7 +5806,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: fa61d55703eb68a4090429366da71ae2, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -5910,6 +5911,7 @@ MonoBehaviour:
   minPitch: 0
   maxPitch: 0
   collisionDistanceThreshold: 0.1
+  isWallAudioEnabled: 1
 --- !u!114 &915089727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11158,7 +11160,7 @@ Transform:
   m_GameObject: {fileID: 1347647253}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.02, y: 0, z: -2.35}
+  m_LocalPosition: {x: 0.05, y: 0, z: -2.34}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11248,6 +11250,7 @@ MonoBehaviour:
   minPitch: 0
   maxPitch: 0
   collisionDistanceThreshold: 0.24
+  isWallAudioEnabled: 1
 --- !u!82 &1347647258
 AudioSource:
   m_ObjectHideFlags: 0
@@ -11259,10 +11262,10 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 2ca7503747e319240863bbe01529a837, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -13428,7 +13431,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: a876b44285fb4ee4c8873c4a3b32f439, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -13533,6 +13536,7 @@ MonoBehaviour:
   minPitch: 0
   maxPitch: 0
   collisionDistanceThreshold: 0.1
+  isWallAudioEnabled: 1
 --- !u!114 &1610382354
 MonoBehaviour:
   m_ObjectHideFlags: 0

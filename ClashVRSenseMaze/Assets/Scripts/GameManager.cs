@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public GameObject instructionPanel; // Reference to the panel containing instructions
     public GameObject startPoint;
     public GameObject maze;
+    public GameObject Ground;
 
     public GameObject Left;
     public GameObject Right;
@@ -36,6 +37,7 @@ public class GameManager : MonoBehaviour
     private AudioSource audioSourcePlayer;
     private AudioSource audioSourcePlayerLeft;
     private AudioSource audioSourcePlayerRight;
+    private AudioSource NextLevelCall;
 
 
     public string[] conditions = new string[] { "all", "visual_only", "audio_only", "haptic_only",
@@ -67,6 +69,8 @@ public class GameManager : MonoBehaviour
         audioSourcePlayer = player.GetComponent<AudioSource>();
         audioSourcePlayerLeft = Left.GetComponent<AudioSource>();
         audioSourcePlayerRight = Right.GetComponent<AudioSource>();
+        NextLevelCall = Ground.GetComponent<AudioSource>();
+
         startTime = Time.time;
 
         // Disable all
@@ -148,7 +152,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SetNextMaze()
     {
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(5f);
         
         instructionPanel.SetActive(false);
         foreach( GameObject goal in ChangingGoals)
@@ -175,6 +179,8 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene("MainMenuScene");
             return;
         }
+
+        NextLevelCall.Play();
 
         // Activate next condition
         path = mazeManager.SetPath(Paths);
@@ -222,7 +228,7 @@ public class GameManager : MonoBehaviour
         case "visual_full_clash" when true:
             textMeshPro.text = "Next Maze:\nTrust Audio and Haptic, Visual Could Be Misleading";
             break;
-        case "Haptic_full_clash" when true:
+        case "haptic_full_clash" when true:
             textMeshPro.text = "Next Maze:\nTrust Visual and Audio, Haptic Could Be Misleading";
             break;
 
