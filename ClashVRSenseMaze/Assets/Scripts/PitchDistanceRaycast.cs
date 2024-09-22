@@ -14,6 +14,10 @@ public class PitchDistanceRaycast : MonoBehaviour
     public float maxPitch = 2.0f; // Maximum pitch value
     public float collisionDistanceThreshold = 0.1f; // Distance threshold for collision sound
 
+    private Coroutine audioCoroutine;
+
+    public bool isWallAudioEnabled = true;
+
     private bool hasCollided = false; // Flag to track if a collision has occurred
 
     void Start()
@@ -22,13 +26,71 @@ public class PitchDistanceRaycast : MonoBehaviour
         {
             continuousAudioSource.Stop(); // Ensure the continuous audio source is playing
         }
+        
+        if (collisionAudioSource != null && !collisionAudioSource.isPlaying)
+        {
+            collisionAudioSource.Stop(); // Ensure the continuous audio source is playing
+        }
     }
 
-    void Update()
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!isWallAudioEnabled) return;
+        
+        if (other.gameObject.CompareTag("Wall") || other.gameObject.CompareTag("Intangable") || 
+            other.gameObject.CompareTag("AudioGhost") || other.gameObject.CompareTag("Invisible"))
+        {
+            if (audioCoroutine == null)
+            {
+                audioCoroutine = StartCoroutine(ContinuousAudioFeedback());
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Wall") || other.gameObject.CompareTag("Intangable")||
+            other.gameObject.CompareTag("AudioGhost") || other.gameObject.CompareTag("Invisible"))
+        {
+            if (audioCoroutine != null)
+            {
+                StopCoroutine(audioCoroutine);
+                audioCoroutine = null;
+            }
+            StopAudioFeedback();
+        }
+    }
+
+    private IEnumerator ContinuousAudioFeedback()
+    {
+        while (true)
+        {
+            TriggerAudioFeedback();
+            yield return new WaitForSeconds(collisionAudioSource.clip.length);
+        }
+    }
+
+    private void TriggerAudioFeedback()
+    {
+        if (collisionAudioSource != null && collisionClip != null)
+        {
+            collisionAudioSource.PlayOneShot(collisionClip, 0.5f);
+        }
+    }
+
+    private void StopAudioFeedback()
+    {
+        if (collisionAudioSource != null)
+        {
+            collisionAudioSource.Stop();
+        }
+    }
+
+    /*void Update()
     {
         AdjustPitchBasedOnDistance();
     }
-
+    
     void AdjustPitchBasedOnDistance()
     {
         if (xrOrigin == null || continuousAudioSource == null || collisionAudioSource == null || collisionClip == null)
@@ -101,5 +163,5 @@ public class PitchDistanceRaycast : MonoBehaviour
             // Reset the collision flag if no wall is detected
             hasCollided = false;
         }
-    }
+    }*/
 }
