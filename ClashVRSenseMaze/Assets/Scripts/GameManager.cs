@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     MazeManager mazeManager;
+    WallTouch touch;
     public GameObject player; // the player game object
     public GameObject visionPanel; // to make no vision
     public GameObject instructionPanel; // Reference to the panel containing instructions
@@ -124,6 +125,9 @@ public class GameManager : MonoBehaviour
 
     private void OnFinish()
     {
+        // ###BUG FIX### - reset audio and haptic so it won't keep going after finishing the level
+        mazeManager.PlayerModalityAndLimits(false, true, 0.0f, 0.0f, false);
+
         
         if(ConditionCount >= conditions.Length)
         {
@@ -142,6 +146,7 @@ public class GameManager : MonoBehaviour
         UpdateTextNextLevelScreen(conditions[ConditionCount]);
         
     }
+
 
     private void OnStartingPointCollision()
     {

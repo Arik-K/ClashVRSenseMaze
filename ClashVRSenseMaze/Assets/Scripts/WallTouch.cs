@@ -61,7 +61,7 @@ public class WallTouch : MonoBehaviour
         }
     }
 
-    private void StopHapticFeedback(XRBaseController controller)
+    public void StopHapticFeedback(XRBaseController controller)
     {
         if (controller != null)
         {

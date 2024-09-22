@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class GoalScript : MonoBehaviour
 {
-    private AudioSource audioSource;
+    
+    public GameManager gm;
+    public AudioSource audioSource;
     
     public float maxDistance = 0.25f; // Maximum distance at which the sound starts playing
     public float minDistance = 0.01f;  // Distance at which the sound is at full volume
@@ -28,39 +30,43 @@ public class GoalScript : MonoBehaviour
         audioSource.playOnAwake = true; // Start playing immediately
 
         // Make sure the GameObject has the correct tag
-        if (gameObject.tag != "Goal")
-        {
-            Debug.LogWarning("GoalScript is attached to an object without the 'Goal' tag!");
-            gameObject.tag = "Goal";
-        }
     }
 
     void Update()
     {
-        // Find the listener (player)
-        GameObject listener = GameObject.FindGameObjectWithTag(listenerTag);
-        if (listener != null)
+        
+        if (gm.conditions[gm.ConditionCount-1] == "visual_only"|| gm.conditions[gm.ConditionCount-1] == "haptic_only" || gm.conditions[gm.ConditionCount-1] == "audio_off")
         {
-            float distance = Vector3.Distance(transform.position, listener.transform.position);
-            
-            // Adjust volume based on distance
-            if (distance <= maxDistance)
-            {
-                // Ensure audio is playing
-                if (!audioSource.isPlaying)
-                {
-                    audioSource.Play();
-                }
+            audioSource.volume = 0;
+        }
 
-                // Calculate volume (1 at minDistance, 0 at maxDistance)
-                float volume = 0.7f - Mathf.Clamp01((distance - minDistance) / (maxDistance - minDistance));
-                audioSource.volume = volume;
-            }
-            else
+        else{
+            // Find the listener (player)
+            GameObject listener = GameObject.FindGameObjectWithTag(listenerTag);
+            if (listener != null)
             {
-                // Stop audio if listener is too far
-                audioSource.Stop();
+                float distance = Vector3.Distance(transform.position, listener.transform.position);
+                
+                // Adjust volume based on distance
+                if (distance <= maxDistance && gameObject.tag == "Goal")
+                {
+                    // Ensure audio is playing
+                    if (!audioSource.isPlaying)
+                    {
+                        audioSource.Play();
+                    }
+
+                    // Calculate volume (1 at minDistance, 0 at maxDistance)
+                    float volume = 0.7f - Mathf.Clamp01((distance - minDistance) / (maxDistance - minDistance));
+                    audioSource.volume = volume;
+                }
+                else
+                {
+                    // Stop audio if listener is too far
+                    audioSource.Stop();
+                }
             }
         }
+        
     }
 }

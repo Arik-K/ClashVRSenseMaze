@@ -9,6 +9,7 @@ public class LoggerScript : MonoBehaviour
     public GameObject leftHand;
     public GameObject rightHand;
 
+    public string condition = "";   
     private string filePath;
     private float lastCollisionTime = -1f;
     private float collisionCooldown = 0.5f; // 0.5 seconds cooldown between collisions
@@ -30,6 +31,7 @@ public class LoggerScript : MonoBehaviour
         {
             Debug.LogError("GameManager is not set in the LoggerScript inspector!");
         }
+
     }
 
     public void LogCollision(GameObject collidedObject, string collisionSource)
@@ -41,7 +43,13 @@ public class LoggerScript : MonoBehaviour
 
         float elapsedTime = Time.time - startTime; // Calculate elapsed time since game started
         int CurrPath = GameManager.path; // Assuming gm.currentPath is an int
-        string condition = gm.conditions[gm.ConditionCount - 1];
+        if (gm.ConditionCount-1 < 0){
+            condition = gm.conditions[0];
+        }
+        else{
+            condition = gm.conditions[gm.ConditionCount-1];
+        }
+        
         string objectTag = collidedObject.tag;
 
         Vector3 position;
