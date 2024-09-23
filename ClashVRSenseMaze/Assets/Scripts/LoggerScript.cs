@@ -7,6 +7,7 @@ public class LoggerScript : MonoBehaviour
 {
     public GameManager gm;
     public GameObject player;
+    public Camera playerCamera;
     public GameObject leftHand;
     public GameObject rightHand;
 
@@ -38,8 +39,12 @@ public class LoggerScript : MonoBehaviour
             Debug.LogError("GameManager is not set in the LoggerScript inspector!");
         }
 
+        if (playerCamera == null)
+        {
+            Debug.LogError("Player Camera is not set in the LoggerScript inspector!");
+        }
+
         // Store references to the colliders you want to ignore
-        ignoredColliders[player] = player.GetComponents<Collider>()[0]; // Assuming the first collider is the one to ignore
         ignoredColliders[leftHand] = leftHand.GetComponents<Collider>()[0];
         ignoredColliders[rightHand] = rightHand.GetComponents<Collider>()[0];
     }
@@ -76,15 +81,26 @@ public class LoggerScript : MonoBehaviour
             condition = gm.conditions[gm.ConditionCount - 1];
         }
 
-        LogObjectData(player, playerFilePath, unixTimestamp, currentPath);
+        LogObjectData(player, playerFilePath, unixTimestamp, currentPath, useCamera: true);
         LogObjectData(leftHand, leftHandFilePath, unixTimestamp, currentPath);
         LogObjectData(rightHand, rightHandFilePath, unixTimestamp, currentPath);
     }
 
-    private void LogObjectData(GameObject obj, string filePath, long timestamp, int currentPath)
+    private void LogObjectData(GameObject obj, string filePath, long timestamp, int currentPath, bool useCamera = false)
     {
-        Vector3 position = obj.transform.position;
-        Vector3 rotation = obj.transform.eulerAngles;
+        Vector3 position;
+        Vector3 rotation;
+
+        if (useCamera && playerCamera != null)
+        {
+            position = playerCamera.transform.position;
+            rotation = playerCamera.transform.eulerAngles;
+        }
+        else
+        {
+            position = obj.transform.position;
+            rotation = obj.transform.eulerAngles;
+        }
 
         string collisionObject = CheckCollision(obj);
 
@@ -98,8 +114,21 @@ public class LoggerScript : MonoBehaviour
 
     private string CheckCollision(GameObject obj)
     {
-        Collider[] objColliders = obj.GetComponents<Collider>();
-        if (objColliders.Length == 0)
+        Collider objCollider;
+        
+        if (obj == player)
+        {
+            // For player, use the collider on the player object
+            objCollider = player.GetComponent<Collider>();
+        }
+        else
+        {
+            // For hands, use all colliders except the ignored one
+            Collider[] objColliders = obj.GetComponents<Collider>();
+            objCollider = objColliders.Length > 0 ? objColliders[0] : null;
+        }
+
+        if (objCollider == null)
         {
             Debug.LogWarning($"No Collider found on {obj.name}. Collision check skipped.");
             return "NoCollider";
@@ -107,29 +136,21 @@ public class LoggerScript : MonoBehaviour
 
         List<string> collidedTags = new List<string>();
 
-        foreach (Collider objCollider in objColliders)
+        Collider[] colliders = Physics.OverlapBox(
+            objCollider.bounds.center, 
+            objCollider.bounds.extents, 
+            obj.transform.rotation
+        );
+
+        foreach (Collider collider in colliders)
         {
-            if (objCollider == ignoredColliders[obj])
+            if (collider.gameObject != obj && 
+                !collider.CompareTag("Untagged") && 
+                !collider.CompareTag("MainCamera") && 
+                !collider.CompareTag("Player") && 
+                !collider.CompareTag("Hand"))
             {
-                continue; // Skip the ignored collider
-            }
-
-            Collider[] colliders = Physics.OverlapBox(
-                objCollider.bounds.center, 
-                objCollider.bounds.extents, 
-                obj.transform.rotation
-            );
-
-            foreach (Collider collider in colliders)
-            {
-                if (collider.gameObject != obj && 
-                    !collider.CompareTag("Untagged") && 
-                    !collider.CompareTag("MainCamera") && 
-                    !collider.CompareTag("Player") && 
-                    !collider.CompareTag("Hand"))
-                {
-                    collidedTags.Add(collider.tag);
-                }
+                collidedTags.Add(collider.tag);
             }
         }
 
