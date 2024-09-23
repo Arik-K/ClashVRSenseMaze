@@ -18,6 +18,7 @@ TagManager:
   - Intangable
   - FalseGoal
   - HapticGhost
+  - Logger
   layers:
   - Default
   - TransparentFX

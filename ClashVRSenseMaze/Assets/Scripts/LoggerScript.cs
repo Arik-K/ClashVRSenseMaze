@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LoggerScript : MonoBehaviour
@@ -9,89 +10,140 @@ public class LoggerScript : MonoBehaviour
     public GameObject leftHand;
     public GameObject rightHand;
 
-    public string condition = "";   
-    private string filePath;
-    private float lastCollisionTime = -1f;
-    private float collisionCooldown = 0.5f; // 0.5 seconds cooldown between collisions
-    private float startTime; // To track when the game started
+    private string condition = "";   
+    private string filePathPrefix;
+    private string playerFilePath;
+    private string leftHandFilePath;
+    private string rightHandFilePath;
+    private float lastLogTime;
+    private const float LogInterval = 0.02f; // 50Hz (1/50 = 0.02 seconds)
+
+    private Dictionary<GameObject, Collider> ignoredColliders = new Dictionary<GameObject, Collider>();
 
     void Start()
     {
-        startTime = Time.time; // Record the start time of the game
         string date_string = DateTime.Now.ToString("-dd-MM-yyyy_HH-mm-ss");
-        filePath = Path.Combine(Application.persistentDataPath, "collision_log" + date_string + ".csv");
-        Debug.Log("File path: " + filePath);
+        filePathPrefix = Path.Combine(Application.persistentDataPath, "game_log" + date_string);
+        
+        playerFilePath = filePathPrefix + "_player.csv";
+        leftHandFilePath = filePathPrefix + "_lefthand.csv";
+        rightHandFilePath = filePathPrefix + "_righthand.csv";
 
-        if (!File.Exists(filePath))
-        {
-            File.WriteAllText(filePath, "Timeframe,Path,Condition,CollisionSource,ObjectTag,PosX,PosY,PosZ,RotX,RotY,RotZ\n");
-        }
+        InitializeCSVFile(playerFilePath);
+        InitializeCSVFile(leftHandFilePath);
+        InitializeCSVFile(rightHandFilePath);
 
         if (gm == null)
         {
             Debug.LogError("GameManager is not set in the LoggerScript inspector!");
         }
 
+        // Store references to the colliders you want to ignore
+        ignoredColliders[player] = player.GetComponents<Collider>()[0]; // Assuming the first collider is the one to ignore
+        ignoredColliders[leftHand] = leftHand.GetComponents<Collider>()[0];
+        ignoredColliders[rightHand] = rightHand.GetComponents<Collider>()[0];
     }
 
-    public void LogCollision(GameObject collidedObject, string collisionSource)
+    void InitializeCSVFile(string filePath)
     {
-        // Ignore collisions with objects tagged as "Hand" or "Untagged"
-        if (collidedObject.CompareTag("Hand") || collidedObject.CompareTag("Untagged") || collidedObject.CompareTag("Player"))
-            return;
-            
-        if (Time.time - lastCollisionTime < collisionCooldown)
-            return;
+        if (!File.Exists(filePath))
+        {
+            File.WriteAllText(filePath, "UnixTimestamp,Path,Condition,CollisionObject,PosX,PosY,PosZ,RotX,RotY,RotZ\n");
+        }
+        Debug.Log("File initialized: " + filePath);
+    }
 
-        lastCollisionTime = Time.time;
+    void Update()
+    {
+        if (Time.time - lastLogTime >= LogInterval)
+        {
+            LogData();
+            lastLogTime = Time.time;
+        }
+    }
 
-        float elapsedTime = Time.time - startTime; // Calculate elapsed time since game started
-        int CurrPath = GameManager.path; // Assuming gm.currentPath is an int
-        if (gm.ConditionCount-1 < 0){
+    private void LogData()
+    {
+        long unixTimestamp = DateTimeToUnixTimestamp(DateTime.Now);
+        int currentPath = GameManager.path;
+
+        if (gm.ConditionCount - 1 < 0)
+        {
             condition = gm.conditions[0];
         }
-        else{
-            condition = gm.conditions[gm.ConditionCount-1];
-        }
-        
-        string objectTag = collidedObject.tag;
-
-        Vector3 position;
-        Vector3 rotation;
-
-        switch (collisionSource)
+        else
         {
-            case "LeftHand":
-                position = leftHand.transform.position;
-                rotation = leftHand.transform.eulerAngles;
-                break;
-            case "RightHand":
-                position = rightHand.transform.position;
-                rotation = rightHand.transform.eulerAngles;
-                break;
-            default: // Player body
-                position = player.transform.position;
-                rotation = player.transform.eulerAngles;
-                break;
+            condition = gm.conditions[gm.ConditionCount - 1];
         }
 
-        string logEntry = string.Format("{0:F3},{1},{2},{3},{4},{5:F2},{6:F2},{7:F2},{8:F2},{9:F2},{10:F2}",
-            elapsedTime, CurrPath, condition, collisionSource, objectTag,
+        LogObjectData(player, playerFilePath, unixTimestamp, currentPath);
+        LogObjectData(leftHand, leftHandFilePath, unixTimestamp, currentPath);
+        LogObjectData(rightHand, rightHandFilePath, unixTimestamp, currentPath);
+    }
+
+    private void LogObjectData(GameObject obj, string filePath, long timestamp, int currentPath)
+    {
+        Vector3 position = obj.transform.position;
+        Vector3 rotation = obj.transform.eulerAngles;
+
+        string collisionObject = CheckCollision(obj);
+
+        string logEntry = string.Format("{0},{1},{2},{3},{4:F2},{5:F2},{6:F2},{7:F2},{8:F2},{9:F2}",
+            timestamp, currentPath, condition, collisionObject,
             position.x, position.y, position.z,
             rotation.x, rotation.y, rotation.z);
 
         File.AppendAllText(filePath, logEntry + Environment.NewLine);
-        Debug.Log("Log written: " + logEntry);
     }
 
-    void OnCollisionEnter(Collision collision)
+    private string CheckCollision(GameObject obj)
     {
-        LogCollision(collision.gameObject, "Body");
+        Collider[] objColliders = obj.GetComponents<Collider>();
+        if (objColliders.Length == 0)
+        {
+            Debug.LogWarning($"No Collider found on {obj.name}. Collision check skipped.");
+            return "NoCollider";
+        }
+
+        List<string> collidedTags = new List<string>();
+
+        foreach (Collider objCollider in objColliders)
+        {
+            if (objCollider == ignoredColliders[obj])
+            {
+                continue; // Skip the ignored collider
+            }
+
+            Collider[] colliders = Physics.OverlapBox(
+                objCollider.bounds.center, 
+                objCollider.bounds.extents, 
+                obj.transform.rotation
+            );
+
+            foreach (Collider collider in colliders)
+            {
+                if (collider.gameObject != obj && 
+                    !collider.CompareTag("Untagged") && 
+                    !collider.CompareTag("MainCamera") && 
+                    !collider.CompareTag("Player") && 
+                    !collider.CompareTag("Hand"))
+                {
+                    collidedTags.Add(collider.tag);
+                }
+            }
+        }
+
+        if (collidedTags.Count > 0)
+        {
+            return string.Join("|", collidedTags);
+        }
+
+        return "None";
     }
 
-    void OnTriggerEnter(Collider other)
+    private long DateTimeToUnixTimestamp(DateTime dateTime)
     {
-        LogCollision(other.gameObject, "Body");
+        return (long)(dateTime.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
     }
 }
 
