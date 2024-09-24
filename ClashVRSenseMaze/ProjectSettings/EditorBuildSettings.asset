@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Game.unity
     guid: c6897df3834f73b47925f12178db2541
   - enabled: 1
+    path: Assets/Scenes/Game5x5Narrow.unity
+    guid: 19a275a526039c949a546dedeec56aff
+  - enabled: 0
     path: Assets/Scenes/Game3x3.unity
     guid: 015b9bd1e2c2243408672b81cce52d3f
   - enabled: 1

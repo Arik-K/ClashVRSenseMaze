@@ -159,6 +159,10 @@ public class MazeManager : MonoBehaviour
         switch (wallType){
             case "Default" when true:
 
+                foreach(GameObject InsideWall in InsideWalls)
+                {
+                    DefaultWall(InsideWall);     
+                }
                 foreach(GameObject ChangingWall in ChangingWalls)
                 {
                     DefaultWall(ChangingWall);     
