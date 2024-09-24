@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
-
 
 public class GameManager : MonoBehaviour
 {
@@ -20,8 +21,7 @@ public class GameManager : MonoBehaviour
     public GameObject Left;
     public GameObject Right;
 
-    
-    public  int ConditionCount = 0;
+    public int ConditionCount = 0;
     public static int[] Paths = new int[] { 0, 1, 2, 3 };
     public static int path;
 
@@ -34,30 +34,27 @@ public class GameManager : MonoBehaviour
     // maze objects
     public List<GameObject> ChangingGoals = new List<GameObject>();
 
-    
     // audio sources
     private AudioSource audioSourcePlayer;
     private AudioSource audioSourcePlayerLeft;
     private AudioSource audioSourcePlayerRight;
     private AudioSource NextLevelCall;
 
-
-    public string[] conditions = new string[] { "all", "visual_only", "audio_only", "haptic_only",
+    public string[] conditions = new string[] { 
+        "all", "visual_only", "audio_only", "haptic_only",
         "visual_off", "audio_off", "haptic_off",
-        "visual_full_clash", 
-       "audio_full_clash", 
-        "haptic_full_clash",
+        "visual_full_clash", "audio_full_clash", "haptic_full_clash",
         "invisible"
-        };
+    };
 
-    List<string> conditionList;
     List<string> visualTags = new List<string> {"Ivisible", "VisualGhost"};
     List<string> audioTags = new List<string> { "Mute", "AudioGhost" };
     List<string> hapticTags = new List<string> { "Intangable", "TangableGhost" };
-    
+
+    private List<(int, string)> shuffledCombinations;
+
     void Start()
     {
-        //conditionList = new List<string>(conditions); 
         mazeManager = maze.GetComponent<MazeManager>();
         int LayerIgnoreRaycast = LayerMask.NameToLayer("Ignore Raycast");
         Debug.Log("Current layer: " + gameObject.layer);
@@ -76,14 +73,12 @@ public class GameManager : MonoBehaviour
         startTime = Time.time;
 
         // Disable all
-        //instructionPanel.SetActive(false);
         maze.SetActive(false);
         startPoint.SetActive(true);
-        foreach( GameObject goal in ChangingGoals)
+        foreach(GameObject goal in ChangingGoals)
         {
            goal.SetActive(false); 
         }
-        
 
         // Find the PlayerCollisions script and subscribe to the onFinish event.
         PlayerCollsions playerCollisions = FindObjectOfType<PlayerCollsions>();
@@ -97,40 +92,49 @@ public class GameManager : MonoBehaviour
             Debug.LogError("PlayerCollisions script not found!");
         }
 
-        UpdateTextNextLevelScreen(conditions[ConditionCount]);
-        //NextMaze();
-
+        GenerateShuffledCombinations();
+        ConditionCount = 0;
+        UpdateTextNextLevelScreen(shuffledCombinations[ConditionCount].Item2);
     }
 
-        // Method to get a random condition from the list and remove it
-    string GetRandomCondition()
+private void GenerateShuffledCombinations()
+{
+    var combinations = new List<(int, string)>();
+    foreach (int path in Paths)
     {
-        if (conditionList.Count == 0)
+        foreach (string condition in conditions)
         {
-            Debug.LogWarning("No more conditions to choose from.");
-            return null; // Handle this case as needed
+            combinations.Add((path, condition));
         }
-
-        // Get a random index
-        int randomIndex = Random.Range(0, conditionList.Count);
-
-        // Get the condition at the random index
-        string chosenCondition = conditionList[randomIndex];
-
-        // Remove the chosen condition from the list
-        conditionList.RemoveAt(randomIndex);
-
-        return chosenCondition;
     }
 
+    // Log the original list
+    Debug.Log("Original Combinations:");
+    for (int i = 0; i < combinations.Count; i++)
+    {
+        Debug.Log($"{i + 1}: Path {combinations[i].Item1}, Condition: {combinations[i].Item2}");
+    }
+    Debug.Log($"Total combinations: {combinations.Count}");
+
+    // Shuffle the combinations
+    System.Random rng = new System.Random();
+    shuffledCombinations = combinations.OrderBy(x => rng.Next()).ToList();
+
+    // Log the shuffled list
+    Debug.Log("\nShuffled Combinations:");
+    for (int i = 0; i < shuffledCombinations.Count; i++)
+    {
+        Debug.Log($"{i + 1}: Path {shuffledCombinations[i].Item1}, Condition: {shuffledCombinations[i].Item2}");
+    }
+    Debug.Log($"Total combinations after shuffling: {shuffledCombinations.Count}");
+}
 
     private void OnFinish()
     {
         // ###BUG FIX### - reset audio and haptic so it won't keep going after finishing the level
         mazeManager.PlayerModalityAndLimits(false, true, 0.0f, 0.0f, false);
 
-        
-        if(ConditionCount >= conditions.Length)
+        if(ConditionCount >= shuffledCombinations.Count)
         {
             textMeshPro.text = "Thank you for Participating :)";
             SceneManager.LoadScene("MainMenuScene");
@@ -138,26 +142,21 @@ public class GameManager : MonoBehaviour
         }
         
         // Handle the finish event (e.g., start the next maze).
-        foreach( GameObject goal in ChangingGoals)
+        foreach(GameObject goal in ChangingGoals)
         {
            goal.SetActive(false); 
         }
         maze.SetActive(false);
         visionPanel.SetActive(false);
         startPoint.SetActive(true);
-       //instructionPanel.SetActive(true);
-        UpdateTextNextLevelScreen(conditions[ConditionCount]);
-        
+        UpdateTextNextLevelScreen(shuffledCombinations[ConditionCount].Item2);
     }
-
 
     private void OnStartingPointCollision()
     {
         startPoint.SetActive(false);
         instructionPanel.SetActive(true);
         StartCoroutine(SetNextMaze());
-
-        //ActivateCondition(conditions[ConditionCount]);
     }
 
     IEnumerator SetNextMaze()
@@ -165,7 +164,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(5f);
         
         instructionPanel.SetActive(false);
-        foreach( GameObject goal in ChangingGoals)
+        foreach(GameObject goal in ChangingGoals)
         {
            goal.SetActive(true); 
         }
@@ -173,8 +172,6 @@ public class GameManager : MonoBehaviour
 
         NextMaze();
     }
-    
-
 
     void NextMaze()
     {
@@ -184,7 +181,7 @@ public class GameManager : MonoBehaviour
             return;
         }        
 
-        if (ConditionCount == conditions.Length)
+        if (ConditionCount >= shuffledCombinations.Count)
         {
             SceneManager.LoadScene("MainMenuScene");
             return;
@@ -192,63 +189,67 @@ public class GameManager : MonoBehaviour
 
         NextLevelCall.Play();
 
+        // Get the next combination
+        var combination = shuffledCombinations[ConditionCount];
         
         // Activate next condition
-        path = mazeManager.SetPath(Paths);
-        mazeManager.ActivateCondition(conditions[ConditionCount]);
+        path = mazeManager.SetPath(new int[] { combination.Item1 });
+        mazeManager.ActivateCondition(combination.Item2);
+
         // Increment ConditionCount for the next maze
         ConditionCount++;
     }
 
     public void UpdateTextNextLevelScreen(string condition_name)
     {
-      switch (condition_name)
-      {
-                        // Deafult case all senses
-        case "all" when true:
-            textMeshPro.text = "Next Maze:\nTrust all senses";
-            break;
-      
-        // Only one sensory channel active
-        case "audio_only" when true:
-            textMeshPro.text = "Next Maze:\nOnly Audio";
-              break;
-        case "visual_only" when true:
-        textMeshPro.text = "Next Maze:\nOnly Visual";
-              break;
-        case "haptic_only" when true:
-            textMeshPro.text = "Next Maze:\nOnly Haptic";
-              break;
-        
-        // only Two sensory channels - One off
-        case "audio_off" when true:
-            textMeshPro.text = "Next Maze:\nTrust Visual and Haptic";
-            break;
-        case "visual_off" when true:
-            textMeshPro.text = "Next Maze:\nTrust Audio and Haptic";
-            break;
-        case "Haptic_off" when true:
-            textMeshPro.text = "Next Maze:\nTrust Visual and Audio";
-            break;
+        switch (condition_name)
+        {
+            // Default case all senses
+            case "all":
+                textMeshPro.text = "Next Maze:\nTrust all senses";
+                break;
+          
+            // Only one sensory channel active
+            case "audio_only":
+                textMeshPro.text = "Next Maze:\nOnly Audio";
+                break;
+            case "visual_only":
+                textMeshPro.text = "Next Maze:\nOnly Visual";
+                break;
+            case "haptic_only":
+                textMeshPro.text = "Next Maze:\nOnly Haptic";
+                break;
+            
+            // only Two sensory channels - One off
+            case "audio_off":
+                textMeshPro.text = "Next Maze:\nTrust Visual and Haptic";
+                break;
+            case "visual_off":
+                textMeshPro.text = "Next Maze:\nTrust Audio and Haptic";
+                break;
+            case "haptic_off":
+                textMeshPro.text = "Next Maze:\nTrust Visual and Audio";
+                break;
 
-        // Full clash with one sesnory channel
-        case "audio_full_clash" when true:
-            textMeshPro.text = "Next Maze:\nTrust Visual and Haptic, Audio Could Be Misleading";
-            break;
-        case "visual_full_clash" when true:
-            textMeshPro.text = "Next Maze:\nTrust Audio and Haptic, Visual Could Be Misleading";
-            break;
-        case "haptic_full_clash" when true:
-            textMeshPro.text = "Next Maze:\nTrust Visual and Audio, Haptic Could Be Misleading";
-            break;
+            // Full clash with one sensory channel
+            case "audio_full_clash":
+                textMeshPro.text = "Next Maze:\nTrust Visual and Haptic, Audio Could Be Misleading";
+                break;
+            case "visual_full_clash":
+                textMeshPro.text = "Next Maze:\nTrust Audio and Haptic, Visual Could Be Misleading";
+                break;
+            case "haptic_full_clash":
+                textMeshPro.text = "Next Maze:\nTrust Visual and Audio, Haptic Could Be Misleading";
+                break;
 
-        //Special wall case
-        case "invisible" when true:
-            textMeshPro.text = "Next Maze:\nTrust Audio and Haptic, Visual Could Be Misleading";
-            break;
+            //Special wall case
+            case "invisible":
+                textMeshPro.text = "Next Maze:\nTrust Audio and Haptic, Visual Could Be Misleading";
+                break;
 
-      } 
-    
+            default:
+                textMeshPro.text = "Next Maze:\nUnknown condition";
+                break;
+        }
     }
-    
 }

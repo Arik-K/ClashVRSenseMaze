@@ -330,7 +330,7 @@ public class MazeManager : MonoBehaviour
     {
         PlayerModalityAndLimits(false, true, 0.25f, 0.5f, false);
         setWalls("Default");        
-        Debug.Log("Applying haptic only");
+        Debug.Log("Applying haptic off");
 
     }
 
@@ -345,7 +345,7 @@ public class MazeManager : MonoBehaviour
     {
         PlayerModalityAndLimits(false, true, 0.25f, 0.5f, true);
         setWalls("Audio");
-        Debug.Log("Applying Full Visual Clash");
+        Debug.Log("Applying Full Audio Clash");
     }
     void ApplyHapticlFullClash()
     {
@@ -358,7 +358,7 @@ public class MazeManager : MonoBehaviour
     {
         PlayerModalityAndLimits(false, true, 0.25f, 0.5f, true);
         setWalls("Invisible");
-        Debug.Log("Applying Full Haptic Clash");
+        Debug.Log("Applying Invisible");
     }
 
 
