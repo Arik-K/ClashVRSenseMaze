@@ -9,6 +9,7 @@ using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
+    public List<(int, string)> ShuffledCombinations { get; private set; }
     MazeManager mazeManager;
     WallTouch touch;
     public GameObject player; // the player game object
@@ -97,37 +98,37 @@ public class GameManager : MonoBehaviour
         UpdateTextNextLevelScreen(shuffledCombinations[ConditionCount].Item2);
     }
 
-private void GenerateShuffledCombinations()
-{
-    var combinations = new List<(int, string)>();
-    foreach (int path in Paths)
+    public void GenerateShuffledCombinations()
     {
-        foreach (string condition in conditions)
+        var combinations = new List<(int, string)>();
+        foreach (int path in Paths)
         {
-            combinations.Add((path, condition));
+            foreach (string condition in conditions)
+            {
+                combinations.Add((path, condition));
+            }
         }
-    }
 
-    // Log the original list
-    Debug.Log("Original Combinations:");
-    for (int i = 0; i < combinations.Count; i++)
-    {
-        Debug.Log($"{i + 1}: Path {combinations[i].Item1}, Condition: {combinations[i].Item2}");
-    }
-    Debug.Log($"Total combinations: {combinations.Count}");
+        // Log the original list
+        Debug.Log("Original Combinations:");
+        for (int i = 0; i < combinations.Count; i++)
+        {
+            Debug.Log($"{i + 1}: Path {combinations[i].Item1}, Condition: {combinations[i].Item2}");
+        }
+        Debug.Log($"Total combinations: {combinations.Count}");
 
-    // Shuffle the combinations
-    System.Random rng = new System.Random();
-    shuffledCombinations = combinations.OrderBy(x => rng.Next()).ToList();
+        // Shuffle the combinations
+        System.Random rng = new System.Random();
+        ShuffledCombinations = combinations.OrderBy(x => rng.Next()).ToList();
 
-    // Log the shuffled list
-    Debug.Log("\nShuffled Combinations:");
-    for (int i = 0; i < shuffledCombinations.Count; i++)
-    {
-        Debug.Log($"{i + 1}: Path {shuffledCombinations[i].Item1}, Condition: {shuffledCombinations[i].Item2}");
+        // Log the shuffled list
+        Debug.Log("\nShuffled Combinations:");
+        for (int i = 0; i < shuffledCombinations.Count; i++)
+        {
+            Debug.Log($"{i + 1}: Path {shuffledCombinations[i].Item1}, Condition: {shuffledCombinations[i].Item2}");
+        }
+        Debug.Log($"Total combinations after shuffling: {shuffledCombinations.Count}");
     }
-    Debug.Log($"Total combinations after shuffling: {shuffledCombinations.Count}");
-}
 
     private void OnFinish()
     {

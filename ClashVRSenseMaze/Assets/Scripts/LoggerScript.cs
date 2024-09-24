@@ -11,7 +11,6 @@ public class LoggerScript : MonoBehaviour
     public GameObject leftHand;
     public GameObject rightHand;
 
-    private string condition = "";   
     private string filePathPrefix;
     private string playerFilePath;
     private string leftHandFilePath;
@@ -47,6 +46,9 @@ public class LoggerScript : MonoBehaviour
         // Store references to the colliders you want to ignore
         ignoredColliders[leftHand] = leftHand.GetComponents<Collider>()[0];
         ignoredColliders[rightHand] = rightHand.GetComponents<Collider>()[0];
+
+        // Log shuffled combinations
+        LogShuffledCombinations();
     }
 
     void InitializeCSVFile(string filePath)
@@ -71,22 +73,27 @@ public class LoggerScript : MonoBehaviour
     {
         long unixTimestamp = DateTimeToUnixTimestamp(DateTime.Now);
         int currentPath = GameManager.path;
+        string currentCondition = GetCurrentCondition();
 
-        if (gm.ConditionCount - 1 < 0)
-        {
-            condition = gm.conditions[0];
-        }
-        else
-        {
-            condition = gm.conditions[gm.ConditionCount - 1];
-        }
-
-        LogObjectData(player, playerFilePath, unixTimestamp, currentPath, useCamera: true);
-        LogObjectData(leftHand, leftHandFilePath, unixTimestamp, currentPath);
-        LogObjectData(rightHand, rightHandFilePath, unixTimestamp, currentPath);
+        LogObjectData(player, playerFilePath, unixTimestamp, currentPath, currentCondition, useCamera: true);
+        LogObjectData(leftHand, leftHandFilePath, unixTimestamp, currentPath, currentCondition);
+        LogObjectData(rightHand, rightHandFilePath, unixTimestamp, currentPath, currentCondition);
     }
 
-    private void LogObjectData(GameObject obj, string filePath, long timestamp, int currentPath, bool useCamera = false)
+    private string GetCurrentCondition()
+    {
+        if (gm.ShuffledCombinations != null && gm.ShuffledCombinations.Count > 0)
+        {
+            int currentIndex = gm.ConditionCount - 1;
+            if (currentIndex >= 0 && currentIndex < gm.ShuffledCombinations.Count)
+            {
+                return gm.ShuffledCombinations[currentIndex].Item2;
+            }
+        }
+        return "Unknown";
+    }
+
+    private void LogObjectData(GameObject obj, string filePath, long timestamp, int currentPath, string condition, bool useCamera = false)
     {
         Vector3 position;
         Vector3 rotation;
@@ -165,6 +172,28 @@ public class LoggerScript : MonoBehaviour
     private long DateTimeToUnixTimestamp(DateTime dateTime)
     {
         return (long)(dateTime.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
+    }
+
+    private void LogShuffledCombinations()
+    {
+        if (gm != null && gm.ShuffledCombinations != null)
+        {
+            string combinationsFilePath = filePathPrefix + "_shuffled_combinations.csv";
+            using (StreamWriter writer = new StreamWriter(combinationsFilePath))
+            {
+                writer.WriteLine("Index,Path,Condition");
+                for (int i = 0; i < gm.ShuffledCombinations.Count; i++)
+                {
+                    var combination = gm.ShuffledCombinations[i];
+                    writer.WriteLine($"{i + 1},{combination.Item1},{combination.Item2}");
+                }
+            }
+            Debug.Log("Shuffled combinations logged to: " + combinationsFilePath);
+        }
+        else
+        {
+            Debug.LogWarning("GameManager or ShuffledCombinations is null");
+        }
     }
 }
 
