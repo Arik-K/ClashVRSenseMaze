@@ -4071,7 +4071,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gm: {fileID: 911231549}
   audioSource: {fileID: 575591860}
-  maxDistance: 1.01
+  maxDistance: 1.2
   minDistance: 0.2
   listenerTag: MainCamera
 --- !u!1 &593347060
@@ -4913,7 +4913,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gm: {fileID: 911231549}
   audioSource: {fileID: 723730042}
-  maxDistance: 1.01
+  maxDistance: 1.2
   minDistance: 0.2
   listenerTag: MainCamera
 --- !u!1 &724445236
@@ -5133,7 +5133,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gm: {fileID: 911231549}
   audioSource: {fileID: 724445237}
-  maxDistance: 1.01
+  maxDistance: 1.2
   minDistance: 0.2
   listenerTag: MainCamera
 --- !u!1 &783571656
@@ -16980,7 +16980,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gm: {fileID: 911231549}
   audioSource: {fileID: 2056764192}
-  maxDistance: 1.01
+  maxDistance: 1.2
   minDistance: 0.2
   listenerTag: MainCamera
 --- !u!1 &2069727403

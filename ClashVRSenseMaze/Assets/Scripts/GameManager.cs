@@ -9,7 +9,7 @@ using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
-    public List<(int, string)> ShuffledCombinations { get; private set; }
+    public List<(int, string)> ShuffledCombinations { get; private set; } = new List<(int, string)>();
     MazeManager mazeManager;
     WallTouch touch;
     public GameObject player; // the player game object
@@ -95,8 +95,16 @@ public class GameManager : MonoBehaviour
 
         GenerateShuffledCombinations();
         ConditionCount = 0;
-        UpdateTextNextLevelScreen(shuffledCombinations[ConditionCount].Item2);
+        if (ShuffledCombinations.Count > 0)
+        {
+            UpdateTextNextLevelScreen(ShuffledCombinations[ConditionCount].Item2);
+        }
+        else{
+            Debug.LogError("ShuffledCombinations is empty!");
+            }
+
     }
+    
 
     public void GenerateShuffledCombinations()
     {
@@ -123,19 +131,18 @@ public class GameManager : MonoBehaviour
 
         // Log the shuffled list
         Debug.Log("\nShuffled Combinations:");
-        for (int i = 0; i < shuffledCombinations.Count; i++)
+        for (int i = 0; i < ShuffledCombinations.Count; i++)
         {
-            Debug.Log($"{i + 1}: Path {shuffledCombinations[i].Item1}, Condition: {shuffledCombinations[i].Item2}");
+            Debug.Log($"{i + 1}: Path {ShuffledCombinations[i].Item1}, Condition: {ShuffledCombinations[i].Item2}");
         }
-        Debug.Log($"Total combinations after shuffling: {shuffledCombinations.Count}");
+        Debug.Log($"Total combinations after shuffling: {ShuffledCombinations.Count}");
     }
-
     private void OnFinish()
     {
         // ###BUG FIX### - reset audio and haptic so it won't keep going after finishing the level
         mazeManager.PlayerModalityAndLimits(false, true, 0.0f, 0.0f, false);
 
-        if(ConditionCount >= shuffledCombinations.Count)
+        if(ConditionCount >= ShuffledCombinations.Count)
         {
             textMeshPro.text = "Thank you for Participating :)";
             SceneManager.LoadScene("MainMenuScene");
@@ -150,7 +157,7 @@ public class GameManager : MonoBehaviour
         maze.SetActive(false);
         visionPanel.SetActive(false);
         startPoint.SetActive(true);
-        UpdateTextNextLevelScreen(shuffledCombinations[ConditionCount].Item2);
+        UpdateTextNextLevelScreen(ShuffledCombinations[ConditionCount].Item2);
     }
 
     private void OnStartingPointCollision()
@@ -182,23 +189,22 @@ public class GameManager : MonoBehaviour
             return;
         }        
 
-        if (ConditionCount >= shuffledCombinations.Count)
+        if (ConditionCount < ShuffledCombinations.Count)
+        {
+            // Get the next combination
+            var combination = ShuffledCombinations[ConditionCount];
+            
+            // Activate next condition
+            path = mazeManager.SetPath(new int[] { combination.Item1 });
+            mazeManager.ActivateCondition(combination.Item2);
+
+            // Increment ConditionCount for the next maze
+            ConditionCount++;
+        }
+        else
         {
             SceneManager.LoadScene("MainMenuScene");
-            return;
         }
-
-        NextLevelCall.Play();
-
-        // Get the next combination
-        var combination = shuffledCombinations[ConditionCount];
-        
-        // Activate next condition
-        path = mazeManager.SetPath(new int[] { combination.Item1 });
-        mazeManager.ActivateCondition(combination.Item2);
-
-        // Increment ConditionCount for the next maze
-        ConditionCount++;
     }
 
     public void UpdateTextNextLevelScreen(string condition_name)

@@ -289,7 +289,7 @@ public class MazeManager : MonoBehaviour
     // Conditions Implemintation
     void ApplyVisualAudioHaptic()
     {
-        PlayerModalityAndLimits(false, true, 0.25f, 0.5f, true);
+        PlayerModalityAndLimits(false, true, 0.75f, 0.5f, true);
         setWalls("Default");
         Debug.Log("Applying all senses");
     }
@@ -302,7 +302,7 @@ public class MazeManager : MonoBehaviour
 
     void ApplyAudio()
     {
-        PlayerModalityAndLimits(true, false, 0.25f, 0.5f, false);
+        PlayerModalityAndLimits(true, false, 0.75f, 0.5f, false);
         setWalls("Default");
         Debug.Log("Applying audio only");
     }
@@ -324,7 +324,7 @@ public class MazeManager : MonoBehaviour
     
     void ApplyVisualOff()
     {
-        PlayerModalityAndLimits(true, false, 0.25f, 0.5f, true);
+        PlayerModalityAndLimits(true, false, 0.75f, 0.5f, true);
         setWalls("Default");
         Debug.Log("Applying viusal off");
 
@@ -332,7 +332,7 @@ public class MazeManager : MonoBehaviour
 
     void ApplyHapticOff()
     {
-        PlayerModalityAndLimits(false, true, 0.25f, 0.5f, false);
+        PlayerModalityAndLimits(false, true, 0.75f, 0.5f, false);
         setWalls("Default");        
         Debug.Log("Applying haptic off");
 
@@ -340,27 +340,27 @@ public class MazeManager : MonoBehaviour
 
     void ApplyVisualFullClash()
     {
-        PlayerModalityAndLimits(false, true, 0.25f, 0.5f, true);
+        PlayerModalityAndLimits(false, true, 0.75f, 0.5f, true);
         setWalls("Vision");
         Debug.Log("Applying Full Visual Clash");
 
     }
     void ApplyAudioFullClash()
     {
-        PlayerModalityAndLimits(false, true, 0.25f, 0.5f, true);
+        PlayerModalityAndLimits(false, true, 0.75f, 0.5f, true);
         setWalls("Audio");
         Debug.Log("Applying Full Audio Clash");
     }
     void ApplyHapticlFullClash()
     {
-        PlayerModalityAndLimits(false, true, 0.25f, 0.5f, true);
+        PlayerModalityAndLimits(false, true, 0.75f, 0.5f, true);
         setWalls("Haptic");
         Debug.Log("Applying Full Haptic Clash");
     }
 
     void ApplyInvisible()
     {
-        PlayerModalityAndLimits(false, true, 0.25f, 0.5f, true);
+        PlayerModalityAndLimits(false, true, 0.75f, 0.5f, true);
         setWalls("Invisible");
         Debug.Log("Applying Invisible");
     }
