@@ -32,10 +32,26 @@ public class GoalScript : MonoBehaviour
         // Make sure the GameObject has the correct tag
     }
 
+    private string GetCurrentCondition()
+    {
+        if (gm.ShuffledCombinations != null && gm.ShuffledCombinations.Count > 0)
+        {
+            int currentIndex = gm.ConditionCount - 1;
+            if (currentIndex >= 0 && currentIndex < gm.ShuffledCombinations.Count)
+            {
+                return gm.ShuffledCombinations[currentIndex].Item2;
+            }
+        }
+        return "Unknown";
+    }
+
+
     void Update()
     {
         
-        if (gm.conditions[gm.ConditionCount-1] == "visual_only"|| gm.conditions[gm.ConditionCount-1] == "haptic_only" || gm.conditions[gm.ConditionCount-1] == "audio_off")
+        string currentCondition = GetCurrentCondition();
+        
+        if (currentCondition == "visual_only" || currentCondition == "audio_off")
         {
             audioSource.volume = 0;
         }

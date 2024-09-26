@@ -79,7 +79,7 @@ public class MazeManager : MonoBehaviour
     void VisualGhostWall(GameObject wall)
     {
         wall.tag = "VisualGhost";
-        wall.layer = LayerMask.NameToLayer("Ignore Raycast");
+        //wall.layer = LayerMask.NameToLayer("Ignore Raycast");
         wall.GetComponent<MeshRenderer>().enabled = true;
     }
 
@@ -93,7 +93,7 @@ public class MazeManager : MonoBehaviour
     void HapticGhostWall(GameObject wall)
     {
         wall.tag = "HapticGhost";
-        wall.layer = LayerMask.NameToLayer("Ignore Raycast");
+        //wall.layer = LayerMask.NameToLayer("Ignore Raycast");
         wall.GetComponent<MeshRenderer>().enabled = false;
     }
 
@@ -108,7 +108,7 @@ public class MazeManager : MonoBehaviour
     void MuteWall(GameObject wall)
     {
         wall.tag = "Mute";
-        wall.layer = LayerMask.NameToLayer("Ignore Raycast");
+        //wall.layer = LayerMask.NameToLayer("Ignore Raycast");
         wall.GetComponent<MeshRenderer>().enabled = true;
     }
 
@@ -171,6 +171,11 @@ public class MazeManager : MonoBehaviour
 
             case "Vision" when true:
 
+                foreach(GameObject InsideWall in InsideWalls)
+                {
+                    DefaultWall(InsideWall);     
+                }
+                
                 foreach(GameObject ChangingWall in ChangingWalls)
                 {
                     InvisibleWall(ChangingWall);     
@@ -180,6 +185,11 @@ public class MazeManager : MonoBehaviour
             break;
             
             case "Audio" when true:
+
+                foreach(GameObject InsideWall in InsideWalls)
+                {
+                    DefaultWall(InsideWall);     
+                }
 
                 ChangingWalls[GameManager.path].SetActive(true);
                 foreach(GameObject ChangingWall in ChangingWalls)
@@ -192,6 +202,11 @@ public class MazeManager : MonoBehaviour
             
             case "Haptic" when true:
 
+                foreach(GameObject InsideWall in InsideWalls)
+                {
+                    DefaultWall(InsideWall);     
+                }
+                
                 ChangingWalls[GameManager.path].SetActive(true);
                 foreach(GameObject ChangingWall in ChangingWalls)
                 {
@@ -309,7 +324,7 @@ public class MazeManager : MonoBehaviour
 
     void ApplyHaptic()
     {
-        PlayerModalityAndLimits(true, false, 0f, 0f, true);
+        PlayerModalityAndLimits(true, true, 0f, 0f, true);
         setWalls("Default");
         Debug.Log("Applying haptic only");
     }
@@ -324,7 +339,7 @@ public class MazeManager : MonoBehaviour
     
     void ApplyVisualOff()
     {
-        PlayerModalityAndLimits(true, false, 0.75f, 0.5f, true);
+        PlayerModalityAndLimits(true, true, 0.75f, 0.5f, true);
         setWalls("Default");
         Debug.Log("Applying viusal off");
 
