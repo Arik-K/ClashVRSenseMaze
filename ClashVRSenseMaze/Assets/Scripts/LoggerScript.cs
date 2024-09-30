@@ -153,6 +153,7 @@ public class LoggerScript : MonoBehaviour
         {
             if (collider.gameObject != obj && 
                 !collider.CompareTag("Untagged") && 
+                !collider.CompareTag("Ground") &&
                 !collider.CompareTag("MainCamera") && 
                 !collider.CompareTag("Player") && 
                 !collider.CompareTag("Hand"))
