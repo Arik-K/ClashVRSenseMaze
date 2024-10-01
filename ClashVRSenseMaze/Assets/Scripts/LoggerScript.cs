@@ -152,6 +152,7 @@ public class LoggerScript : MonoBehaviour
         foreach (Collider collider in colliders)
         {
             if (collider.gameObject != obj && 
+                collider.isTrigger &&
                 !collider.CompareTag("Untagged") && 
                 !collider.CompareTag("Ground") &&
                 !collider.CompareTag("MainCamera") && 

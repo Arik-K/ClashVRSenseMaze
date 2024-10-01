@@ -324,7 +324,7 @@ public class MazeManager : MonoBehaviour
 
     void ApplyHaptic()
     {
-        PlayerModalityAndLimits(true, true, 0f, 0f, true);
+        PlayerModalityAndLimits(true, false, 0f, 0f, true);
         setWalls("Default");
         Debug.Log("Applying haptic only");
     }
@@ -339,7 +339,7 @@ public class MazeManager : MonoBehaviour
     
     void ApplyVisualOff()
     {
-        PlayerModalityAndLimits(true, true, 0.75f, 0.5f, true);
+        PlayerModalityAndLimits(true, false, 0.75f, 0.5f, true);
         setWalls("Default");
         Debug.Log("Applying viusal off");
 
