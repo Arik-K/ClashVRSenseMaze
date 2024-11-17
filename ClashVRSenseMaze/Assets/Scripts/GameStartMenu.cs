@@ -19,6 +19,7 @@ public class GameStartMenu : MonoBehaviour
 
     private const int MainGameSceneIndex = 1;
     private const int TrainingSceneIndex = 2;
+    private const int DemoSceneIndex = 3;
 
     public List<Button> returnButtons;
 
@@ -29,7 +30,7 @@ public class GameStartMenu : MonoBehaviour
 
         // Hook events
         startButton.onClick.AddListener(StartGame);
-        optionButton.onClick.AddListener(EnableOption);
+        optionButton.onClick.AddListener(StartDemo);
         trainingButton.onClick.AddListener(StartTraining);
         quitButton.onClick.AddListener(QuitGame);
 
@@ -74,5 +75,11 @@ public class GameStartMenu : MonoBehaviour
     {
         HideAll();
         SceneTransitionManager.singleton.GoToSceneAsync(TrainingSceneIndex);
+    }
+    
+    public void StartDemo()
+    {
+        HideAll();
+        SceneTransitionManager.singleton.GoToSceneAsync(DemoSceneIndex);
     }
 }
