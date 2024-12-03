@@ -1912,7 +1912,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &209191458
 Transform:
   m_ObjectHideFlags: 0
@@ -4716,7 +4716,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &723730042
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5856,15 +5856,14 @@ MonoBehaviour:
   - {fileID: 575591859}
   - {fileID: 2056764191}
   - {fileID: 724445236}
-  - {fileID: 723730041}
   conditions:
   - all
   - visual_only
   - audio_only
   - haptic_only
   - visual_off
-  - audio_off
-  - haptic_off
+  - Haptic_Clash_Vision_Off
+  - Audio_Clash_Vision_Off
   - visual_full_clash
   - audio_full_clash
   - haptic_full_clash
@@ -11552,7 +11551,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1347647253}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b1e8c997df241c1a67045eeac79b41b, type: 3}
   m_Name: 
@@ -11602,7 +11601,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1347647253}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 919e39492806b334982b6b84c90dd927, type: 3}
   m_Name: 
@@ -11656,7 +11655,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1347647253}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03a5df2202a8b96488c744be3bd0c33e, type: 3}
   m_Name: 
@@ -11670,7 +11669,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1347647253}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2213c36610e3b1c4bbf886810ed9db12, type: 3}
   m_Name: 
@@ -14596,7 +14595,6 @@ MonoBehaviour:
   - {fileID: 1430220959}
   - {fileID: 1424742519}
   - {fileID: 605266560}
-  - {fileID: 209191457}
   ChangingGoals:
   - {fileID: 575591859}
   - {fileID: 2056764191}

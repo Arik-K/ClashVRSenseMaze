@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
     public GameObject Right;
 
     public int ConditionCount = 0;
-    public static int[] Paths = new int[] { 0, 1, 2, 3 };
+    public static int[] Paths = new int[] { 0, 1, 2};
     public static int path;
 
     private float startTime;
@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
 
     public string[] conditions = new string[] { 
         "all", "visual_only", "audio_only", "haptic_only",
-        "visual_off", "audio_off", "haptic_off",
+        "visual_off", "Haptic_Clash_Vision_Off", "Audio_Clash_Vision_Off",
         "visual_full_clash", "audio_full_clash", "haptic_full_clash",
         "invisible"
     };
@@ -252,6 +252,13 @@ public class GameManager : MonoBehaviour
             //Special wall case
             case "invisible":
                 textMeshPro.text = "Next Maze:\nTrust Audio and Haptic, Visual Could Be Misleading";
+                break;
+            
+            case "Haptic_Clash_Vision_Off" when true:
+                textMeshPro.text = "Next Maze:\nTrust Audio, Haptic Could Be Misleading";
+                break;
+            case "Audio_Clash_Vision_Off" when true:
+                textMeshPro.text = "Next Maze:\nTrust Haptic, Audio Could Be Misleading";
                 break;
 
             default:

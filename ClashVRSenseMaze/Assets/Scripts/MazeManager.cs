@@ -34,13 +34,13 @@ public class MazeManager : MonoBehaviour
      
 
     /*public static string[] conditions = new string[] { "all", "visual_only", "audio_only", "haptic_only",
-        "visual_off", "audio_off", "haptic_off",
+        "visual_off", "Haptic_Clash_Vision_Off", "Audio_Clash_Vision_Off",
         "visual_full_clash", "audio_full_clash", "haptic_full_clash", "Invisible"};
      */   
     // Start is called before the first frame update
     void Awake()
     {
-        int[] Paths = new int[] { 0, 1, 2, 3 };
+        int[] Paths = new int[] { 0, 1, 2};
         if (ChangingWalls == null)
         {
             Debug.LogError("No parent object assigned for ChaningWalls.");
@@ -294,6 +294,13 @@ public class MazeManager : MonoBehaviour
             case "invisible" when true:
                 ApplyInvisible();
                 break;  
+
+            case "Haptic_Clash_Vision_Off" when true:
+                ApplyHapticClashVisionOff();
+                break;
+            case "Audio_Clash_Vision_Off" when true:
+                ApplyAudioClashVisionOff();
+                break;
         }
 
 
@@ -380,7 +387,17 @@ public class MazeManager : MonoBehaviour
         Debug.Log("Applying Invisible");
     }
 
+    void ApplyHapticClashVisionOff()
+    {
+        PlayerModalityAndLimits(true, false, 0.75f, 0.5f, true);
+        setWalls("Haptic");
+    }
 
+    void ApplyAudioClashVisionOff()
+    {
+        PlayerModalityAndLimits(true, false, 0.75f, 0.5f, true);
+        setWalls("Audio");
+    }
 }
 
 
